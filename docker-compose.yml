@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  server_proxy:
+    build:
+      context: server_proxy/.
+      dockerfile: ../WPCareServerProxy.Dockerfile
+    restart: always
+    ports:
+      - '80:80'
+    command: /app/start.sh
