@@ -6,6 +6,8 @@ services:
       context: server_proxy/.
       dockerfile: ../WPCareServerProxy.Dockerfile
     restart: always
+    environment:
+      - FLASK_SERVER_ADDR=server_api:8000
     ports:
       - '80:80'
     healthcheck:
@@ -14,3 +16,12 @@ services:
       timeout: 10s
       retries: 3
     command: /app/start.sh
+
+  server_api:
+    build:
+      context: server_api/.
+      dockerfile: ../WPCareServerApi.Dockerfile
+    restart: always
+    ports:
+      - '8000:8000'
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
