@@ -8,4 +8,9 @@ services:
     restart: always
     ports:
       - '80:80'
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:80/health-check || exit 1']
+      interval: 300s
+      timeout: 10s
+      retries: 3
     command: /app/start.sh
