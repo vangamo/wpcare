@@ -24,11 +24,26 @@ services:
       context: server_api/.
       dockerfile: ../WPCareServerApi.Dockerfile
     restart: always
+    environment:
+      PGSQL_DB: ${PGSQL_DB}
+      PGSQL_USER: ${PGSQL_USER}
+      PGSQL_PASSWORD: ${PGSQL_PASSWORD}
     ports:
       - '8000:8000'
+    depends_on:
+      - server_data
     healthcheck:
       test: ['CMD-SHELL', 'curl --silent --fail localhost:8000/flask-health-check || exit 1']
       interval: 10s
       timeout: 10s
       retries: 3
     command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
+
+  server_data:
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${PGSQL_ROOT_PASSWORD}
+      POSTGRES_USER: ${PGSQL_ROOT_USER}
+    ports:
+      - 5432:5432

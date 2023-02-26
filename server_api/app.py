@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api, Resource
 from flask_cors import CORS
+import src.db.db as db
 
 # FLASK_ENV=development flask run --debugger
 
@@ -10,16 +11,20 @@ api = Api(app)
 
 @app.route('/')
 def get_root():
-   return 'Oh oh', 404
+  return 'Oh oh', 404
 
 @app.route('/api/')
 def get_api_root():
-   return 'Site not created', 404
+  return 'Site not created', 404
 
 @app.route('/flask-health-check')
 def check_flask_health_check():
-   print('"GET /flask-health-check HTTP/1.1" 503')
-   return 'Success', 200
+  try:
+    db.get_connection()
+  except Exception as ex:
+    return 'Error DB: '+str(ex), 503
+  else:
+    return 'Success', 200
 
 # if __name__ == '__main__':
 #   app.run(debug=True)
