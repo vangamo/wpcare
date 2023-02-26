@@ -16,6 +16,11 @@ def get_root():
 def get_api_root():
    return 'Site not created', 404
 
+@app.route('/flask-health-check')
+def check_flask_health_check():
+   print('"GET /flask-health-check HTTP/1.1" 503')
+   return 'Success', 200
+
 # if __name__ == '__main__':
 #   app.run(debug=True)
 

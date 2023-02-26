@@ -1,7 +1,9 @@
 FROM python:3.9.2-alpine
 
+# Based on <https://github.com/docker/awesome-compose/tree/master/nginx-wsgi-flask>
+
 # Install libpq-dev 
-RUN apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk add postgresql-dev gcc python3-dev musl-dev curl
 
 # upgrade pip
 RUN pip install --upgrade pip
