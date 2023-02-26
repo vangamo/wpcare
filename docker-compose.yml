@@ -53,3 +53,9 @@ services:
       POSTGRES_USER: ${PGSQL_ROOT_USER}
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "${PGSQL_WPCARE_DB}"]
+      interval: 150s
+      timeout: 60s
+      retries: 5
+      start_period: 80s 
