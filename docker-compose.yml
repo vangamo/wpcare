@@ -25,9 +25,9 @@ services:
       dockerfile: ../WPCareServerApi.Dockerfile
     restart: always
     environment:
-      PGSQL_DB: ${PGSQL_DB}
-      PGSQL_USER: ${PGSQL_USER}
-      PGSQL_PASSWORD: ${PGSQL_PASSWORD}
+      PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+      PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+      PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
     ports:
       - '8000:8000'
     depends_on:
@@ -40,7 +40,13 @@ services:
     command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
 
   server_data:
-    image: postgres:15.1-alpine
+    build:
+      context: server_data/.
+      dockerfile: ../WPCareServerData.Dockerfile
+      args:
+        PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+        PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+        PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
     restart: always
     environment:
       POSTGRES_PASSWORD: ${PGSQL_ROOT_PASSWORD}
