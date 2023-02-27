@@ -3,6 +3,22 @@ Analize, check and verify WP sites
 
 ### Development
 
+Setup
+
+```bash
+# to install pycurl
+apk add curl curl-dev libressl-dev
+# or
+apt install build-essential python3-dev libcurl4-openssl-dev libssl-dev
+
+pip install Flask Flask-Cors Flask-RESTful
+# pip install gunicorn # Only for Docker.
+psycopg2-binary
+pip install pycurl
+
+pip freeze > requirements.txt
+```
+
 ```bash
 cd server_api
 source bin/activate

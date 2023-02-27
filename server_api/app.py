@@ -28,7 +28,22 @@ def check_flask_health_check():
 
 class Site(Resource):
   def get(self, id:int=None):
-    return 'Site not created', 404
+    print(id)
+    if id is None:
+      sites = [
+        {'id': 1, 'name': 'Python', 'url': 'https://python.org'},
+        {'id': 2, 'name': 'React', 'url': 'https://reactjs.org/'}
+      ]
+
+      return sites, 200
+    else:
+      site = {'id': id, 'name': 'Python', 'url': 'https://python.org'}
+
+      if site is not None:
+        return site, 200
+      
+      else:
+        return {"error": True, "message": "Site not found"}, 404
 
   def post(self, id:int=0):
     return 'Site not created', 404
@@ -39,7 +54,7 @@ class Site(Resource):
   def delete(self, id:int=0):
     return 'Site not deleted', 404
 
-api.add_resource(Site, "/api/sites/", "/api/site/", "/api/site/<int:id>")
+api.add_resource(Site, "/api/sites/", "/api/site/", "/api/site/<int:id>", "/api/site/<int:id>/")
 
 # if __name__ == '__main__':
 #   app.run(debug=True)
