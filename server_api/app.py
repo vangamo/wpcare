@@ -3,7 +3,7 @@ from flask_restful import Api, Resource
 from flask_cors import CORS
 import src.db.db as db
 
-# FLASK_ENV=development flask run --debugger
+# PGSQL_WPCARE_HOST=localhost PGSQL_WPCARE_DB=wpcare PGSQL_WPCARE_USER= PGSQL_WPCARE_PASSWORD= bin/flask --app app run --debug
 
 app = Flask(__name__, static_url_path='', static_folder='static_react')
 cors = CORS(app, resources={'/api/*': {'origins': '*'}})
