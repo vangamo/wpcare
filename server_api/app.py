@@ -26,6 +26,21 @@ def check_flask_health_check():
   else:
     return 'Success', 200
 
+class Site(Resource):
+  def get(self, id:int=None):
+    return 'Site not created', 404
+
+  def post(self, id:int=0):
+    return 'Site not created', 404
+
+  def put(self, id:int=0):
+    return 'Site not updated', 404
+
+  def delete(self, id:int=0):
+    return 'Site not deleted', 404
+
+api.add_resource(Site, "/api/sites/", "/api/site/", "/api/site/<int:id>")
+
 # if __name__ == '__main__':
 #   app.run(debug=True)
 
