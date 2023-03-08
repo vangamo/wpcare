@@ -4,7 +4,7 @@ services:
   server_proxy:
     build:
       context: server_proxy/.
-      dockerfile: ../WPCareServerProxy.Dockerfile
+      dockerfile: WPCareServerProxy.Dockerfile
     restart: always
     environment:
       - FLASK_SERVER_ADDR=server_api:8000
@@ -22,7 +22,7 @@ services:
   server_api:
     build:
       context: server_api/.
-      dockerfile: ../WPCareServerApi.Dockerfile
+      dockerfile: WPCareServerApi.Dockerfile
     restart: always
     environment:
       PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
@@ -42,7 +42,7 @@ services:
   server_data:
     build:
       context: server_data/.
-      dockerfile: ../WPCareServerData.Dockerfile
+      dockerfile: WPCareServerData.Dockerfile
       args:
         PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
         PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
