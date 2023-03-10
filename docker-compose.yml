@@ -37,7 +37,7 @@ services:
       interval: 300s
       timeout: 10s
       retries: 3
-    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 src.app:app
 
   server_data:
     build:
