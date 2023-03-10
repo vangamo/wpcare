@@ -1,0 +1,13 @@
+# Ignore python virtualenv files
+__pycache__
+**/__pycache__
+bin
+lib
+pyvenv.cfg
+*.Dockerfile
+
+# Ignore unnecessary files
+**/*~
+**/*.log
+**/.DS_Store
+**/Thumbs.db
