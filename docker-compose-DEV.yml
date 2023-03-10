@@ -6,11 +6,11 @@ services:
       context: server_proxy/.
       dockerfile: WPCareServerProxy.Dockerfile
     environment:
-      - FLASK_SERVER_ADDR=server_api:8000
+      - FLASK_SERVER_ADDR=server_api:5000
     ports:
       - '80:80'
     depends_on:
-      - server_api
+      - server_api_dev
     command: /app/start.sh
 
   server_api_dev:
@@ -28,10 +28,10 @@ services:
 #        target: /home/app/src
 #        read_only: true
     ports:
-      - '8000:8000'
+      - '5000:5000'
     depends_on:
-      - server_data
-    command:  flask run --port 8000 --debug
+      - server_data_dev
+    command:  flask run --port 5000 --debug
 
   server_data_dev:
     build:
