@@ -24,13 +24,18 @@ export default function () {
                   lastAccess: '3 days',
                 },
                 {
-                  name: 'Other',
-                  url: 'https://preact.io',
+                  name: 'Wordpress news',
+                  url: 'https://wordpress.org/news/',
                   type: 'WP',
-                  lastAccess: '3 days',
+                  lastAccess: '1 week',
                 },
               ]}
-              columns={['Name', 'Type', 'Last access']}
+              columns={[
+                { type: 'checkbox' },
+                { heading: 'Name', type: 'link', col: 'name', colLink: 'url' },
+                { heading: 'Type', type: 'text', col: 'type' },
+                { heading: 'Last access', type: 'datetime', col: 'lastAccess' },
+              ]}
               detailsElement={(data) => <p>Details of {data.name} page</p>}
             ></Table>
           </div>

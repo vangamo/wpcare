@@ -2,25 +2,40 @@ import { useState } from 'preact/hooks';
 import './table.scss';
 
 function TableColumns(columns) {
-  return [
-    <th key='id'></th>,
-    ...columns.map((column) => <th key={column}>{column}</th>),
-  ];
+  return columns.map((col, idx) =>
+    col.type === 'checkbox' ? (
+      <th key={'col-' + idx}></th>
+    ) : (
+      <th key={'col-' + idx}>{col.heading}</th>
+    )
+  );
 }
 
-function TableRow(row) {
-  return (
-    <>
-      <td>
-        <input type='checkbox' />
-      </td>
-      <td>
-        <a href={row.url}>{row.name}</a>
-      </td>
-      <td>{row.type}</td>
-      <td>{row.lastAccess}</td>
-    </>
-  );
+const ROW_VALUE_RENDERER = {
+  checkbox: (rowValues, columnDef) => {
+    return <input type='checkbox' />;
+  },
+  link: (rowValues, columnDef) => {
+    return (
+      <a href={rowValues[columnDef.colLink]}>{rowValues[columnDef.col]}</a>
+    );
+  },
+  text: (rowValues, columnDef) => {
+    return rowValues[columnDef.col];
+  },
+  datetime: (rowValues, columnDef) => {
+    return rowValues[columnDef.col];
+  },
+};
+
+function TableRow(row, columns, rowIdx) {
+  return columns.map((columnDef, colIdx) => (
+    <td key={'row-' + rowIdx + colIdx}>
+      {ROW_VALUE_RENDERER[columnDef.type]
+        ? ROW_VALUE_RENDERER[columnDef.type](row, columnDef)
+        : ROW_VALUE_RENDERER['text'](row, columnDef)}
+    </td>
+  ));
 }
 
 function TableRowList(data, columns, detailsElement) {
@@ -54,7 +69,7 @@ function TableRowList(data, columns, detailsElement) {
         onClick={detailsElement && handleClickRow}
         title='Click to show details'
       >
-        {TableRow(row)}
+        {TableRow(row, columns, idx)}
       </tr>
       <tr
         key={idx + '-detail'}
