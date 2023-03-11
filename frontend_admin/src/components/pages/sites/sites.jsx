@@ -1,4 +1,5 @@
 import Page from '../../layout/page';
+import Table from '../../table/table';
 import './sites.scss';
 
 export default function () {
@@ -8,38 +9,14 @@ export default function () {
         <div className='box'>
           <h3 className='box__title'>Sites</h3>
           <div className='box__content'>
-            <table className='table' cellspacing='0' cellpadding='0'>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Client</th>
-                  <th>WP version</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input type='checkbox' />
-                  </td>
-                  <td>
-                    <a href='/site/1'>Python</a>
-                  </td>
-                  <td>Pythonics</td>
-                  <td>5.8.3</td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type='checkbox' />
-                  </td>
-                  <td>
-                    <a href='/site/2'>ReactJS</a>
-                  </td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
+            <Table
+              data={[
+                { name: 'Python', url: 'https://python.org', type: 'web', lastAccess: '1 day' },
+                { name: 'Preact', url: 'https://preact.io', type: 'web', lastAccess: '3 days' },
+                { name: 'Other', url: 'https://preact.io', type: 'WP', lastAccess: '3 days' },
+              ]}
+              columns={['Name', 'Type', 'Last access']}
+            ></Table>
           </div>
         </div>
       </div>
