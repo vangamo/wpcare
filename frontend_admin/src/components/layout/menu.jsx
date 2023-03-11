@@ -1,6 +1,6 @@
 export default function Menu() {
   return (
-    <section className="sidenav shadow-right null">
+    <section className="sidenav shadow-right hidden">
       <nav className="sidenav_menu">
         <div className="sidenav__menuheading">Overview</div>
         <a className="sidenav__menulink active" href="#" aria-current="page">

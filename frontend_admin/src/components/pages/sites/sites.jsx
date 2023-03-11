@@ -1,4 +1,4 @@
-import './sites.css';
+import './sites.scss';
 
 export default function () {
   return (

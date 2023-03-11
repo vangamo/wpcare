@@ -1,0 +1,110 @@
+.main {
+  background-color: #ecf0f6;
+  color: hsla(0,0%,100%,.5);
+  height: calc(100vh - 3.625rem);
+  left: 15rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: 3.625rem;
+  transition: left .15s ease-in-out,width .15s ease-in-out;
+  width: calc(100vw - 15rem);
+  z-index: 0
+}
+
+.hidden+.main {
+  left: 0;
+  width: 100vw
+}
+
+.main__background {
+  background-color: #0061f2!important;
+  background-image: linear-gradient(135deg,#0061f2,rgba(105,0,199,.8))!important;
+  height: 16rem;
+  position: absolute;
+  width: 100%;
+  z-index: -1
+}
+
+.main__wrapper {
+  padding: 0 1.5rem
+}
+
+.main__header {
+  padding: 2rem 0
+}
+
+.main__title {
+  color: #fff;
+  font-size: 2.25rem;
+  font-weight: 800
+}
+
+.main__description {
+  font-size: 1.15rem;
+  margin-top: .25rem
+}
+
+.content .row-1,.content .row-2,.content .row-3,.content .row-4 {
+  grid-gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 1.5rem
+}
+
+@media only screen and (min-width: 1024px) {
+  .content .row-2,.content .row-4 {
+      grid-template-columns:1fr 1fr
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .content .row-3 {
+      grid-template-columns:1fr 1fr 1fr
+  }
+
+  .content .row-4 {
+      grid-template-columns: 1fr 1fr 1fr 1fr
+  }
+}
+
+.content .box {
+  background-clip: border-box;
+  background-color: #fff;
+  border: 1px solid rgba(33,40,50,.125);
+  border-radius: .35rem;
+  box-shadow: 0 .15rem 1.75rem 0 rgba(33,40,50,.15);
+  height: 100%!important
+}
+
+.content .box .box__title {
+  align-items: center;
+  background-color: rgba(33,40,50,.03);
+  border-bottom: 1px solid rgba(33,40,50,.125);
+  border-radius: .35rem .35rem 0 0;
+  color: #0061f2;
+  display: flex;
+  font-weight: 500;
+  height: 3.5625rem;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: .5625rem 1.35rem
+}
+
+.content .box .box__content {
+  color: #69707a;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 1.35rem
+}
+
+.content .box .box__content>* {
+  width: 100%
+}
+
+.content .box .form__thin {
+  min-width: 350px;
+  max-width: 33%;
+  margin: auto;
+}
