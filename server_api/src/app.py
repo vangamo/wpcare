@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
 from flask_cors import CORS
-import src.db.db as db
+from src.db import *
 from src.services.sitesService import SitesService
 
 # PGSQL_WPCARE_HOST=localhost PGSQL_WPCARE_DB=wpcare PGSQL_WPCARE_USER= PGSQL_WPCARE_PASSWORD= bin/flask --app app run --debug
@@ -23,12 +23,7 @@ def get_api_root():
 
 @app.route('/flask-health-check')
 def check_flask_health_check():
-  try:
-    db.get_connection()
-  except Exception as ex:
-    return 'Error DB: '+str(ex), 503
-  else:
-    return 'Success', 200
+  check_database()
 
 class Site(Resource):
   def get(self, id:int=None):
