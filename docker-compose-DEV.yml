@@ -18,7 +18,8 @@ services:
       context: server_api/.
       dockerfile: WPCareServerApi.Dockerfile
     environment:
-      PORT: 5000
+      FLASK_DEBUG: 1
+      FLASK_RUN_PORT: 5000
       PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
       PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
       PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
@@ -32,7 +33,7 @@ services:
       - '5000:5000'
     depends_on:
       - server_data_dev
-    command: gunicorn -w 1 -t 60 -b 0.0.0.0:5000 src.app:app # flask run --port 5000 --debug
+    command: gunicorn --reload --access-logfile '-' -w 1 -t 60 -b 0.0.0.0:5000 src.app:app # flask run --port 5000 --debug
 
   server_data_dev:
     build:
