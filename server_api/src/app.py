@@ -31,8 +31,24 @@ class Site(Resource):
     print(id)
     if id is None:
       sites = [
-        {'id': 1, 'name': 'Python', 'url': 'https://python.org'},
-        {'id': 2, 'name': 'React', 'url': 'https://reactjs.org/'}
+        {
+          "name": 'Python',
+          "url": 'https://www.python.org/',
+          "type": 'web',
+          "lastAccess": '1 day',
+        },
+        {
+          "name": 'Preact',
+          "url": 'https://preactjs.com/',
+          "type": 'web',
+          "lastAccess": '3 days',
+        },
+        {
+          "name": 'Wordpress news',
+          "url": 'https://wordpress.org/news/',
+          "type": 'WP',
+          "lastAccess": '1 week',
+        },
       ]
 
       return sites, 200

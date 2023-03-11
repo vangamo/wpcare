@@ -1,8 +1,24 @@
+import { useEffect, useState } from 'preact/hooks';
 import Page from '../../layout/page';
 import Table from '../../table/table';
 import './sites.scss';
 
+const SITES_COLUMNS = [
+  { type: 'checkbox' },
+  { heading: 'Name', type: 'link', col: 'name', colLink: 'url' },
+  { heading: 'Type', type: 'text', col: 'type' },
+  { heading: 'Last access', type: 'datetime', col: 'lastAccess' },
+];
+
 export default function () {
+  const [sitesList, setSitesList] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/sites/', {method: 'GET'})
+      .then(response => response.json())
+      .then(data => setSitesList(data))
+  }, [])
+
   return (
     <Page name='Sites' title='Sites' description='Listing all sites'>
       <div className='row-1'>
@@ -10,33 +26,8 @@ export default function () {
           <h3 className='box__title'>Sites</h3>
           <div className='box__content'>
             <Table
-              data={[
-                {
-                  name: 'Python',
-                  url: 'https://www.python.org/',
-                  type: 'web',
-                  lastAccess: '1 day',
-                },
-                {
-                  name: 'Preact',
-                  url: 'https://preactjs.com/',
-                  type: 'web',
-                  lastAccess: '3 days',
-                },
-                {
-                  name: 'Wordpress news',
-                  url: 'https://wordpress.org/news/',
-                  type: 'WP',
-                  lastAccess: '1 week',
-                },
-              ]}
-              columns={[
-                { type: 'checkbox' },
-                { heading: 'Name', type: 'link', col: 'name', colLink: 'url' },
-                { heading: 'Type', type: 'text', col: 'type' },
-                { heading: 'Last access', type: 'datetime', col: 'lastAccess' },
-              ]}
-              detailsElement={(data) => <p>Details of {data.name} page</p>}
+              data={sitesList}
+              columns={SITES_COLUMNS}
             ></Table>
           </div>
         </div>
