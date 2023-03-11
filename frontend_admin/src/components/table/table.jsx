@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks';
+import PropTypes from 'prop-types';
 import './table.scss';
 
 function TableColumns(columns) {
@@ -91,3 +92,19 @@ export default function Table({ columns, data, detailsElement }) {
     </table>
   );
 }
+
+Table.propTypes = {
+  columns: PropTypes.arrayOf(PropTypes.exact({
+    heading: PropTypes.string,
+    type: PropTypes.string,
+    col: PropTypes.string,
+    colLink: PropTypes.string,
+  })).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  detailsElement: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+    PropTypes.node,
+    PropTypes.func,
+  ]),
+};

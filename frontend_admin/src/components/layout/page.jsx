@@ -1,9 +1,13 @@
+import PropTypes from 'prop-types';
+
 export default function Page({
   name,
   title,
   description,
   children: innerHTML,
 }) {
+  console.log(typeof innerHTML)
+  console.log(innerHTML);
   return (
     <section className={name}>
       <div className='main__background'></div>
@@ -17,4 +21,15 @@ export default function Page({
       </div>
     </section>
   );
+}
+
+Page.propTypes = {
+  name: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+    PropTypes.object
+]).isRequired
 }
