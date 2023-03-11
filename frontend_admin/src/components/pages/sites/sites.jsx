@@ -11,11 +11,27 @@ export default function () {
           <div className='box__content'>
             <Table
               data={[
-                { name: 'Python', url: 'https://python.org', type: 'web', lastAccess: '1 day' },
-                { name: 'Preact', url: 'https://preact.io', type: 'web', lastAccess: '3 days' },
-                { name: 'Other', url: 'https://preact.io', type: 'WP', lastAccess: '3 days' },
+                {
+                  name: 'Python',
+                  url: 'https://www.python.org/',
+                  type: 'web',
+                  lastAccess: '1 day',
+                },
+                {
+                  name: 'Preact',
+                  url: 'https://preactjs.com/',
+                  type: 'web',
+                  lastAccess: '3 days',
+                },
+                {
+                  name: 'Other',
+                  url: 'https://preact.io',
+                  type: 'WP',
+                  lastAccess: '3 days',
+                },
               ]}
               columns={['Name', 'Type', 'Last access']}
+              detailsElement={(data) => <p>Details of {data.name} page</p>}
             ></Table>
           </div>
         </div>
