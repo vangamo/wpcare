@@ -1,0 +1,38 @@
+/**
+
+  #app
+    .header
+    .sidenav
+    .main
+      .<PageName>
+        .main__background
+        .main__wrapper
+          .main__header
+          .content
+            .row-1|row-2|row-3|row-4
+              .box
+                .box__title
+                .box__content
+
+ */
+
+/* Core */
+@import 'layout/reset';
+@import 'layout/colors';
+@import 'layout/boxes';
+@import 'layout/effects';
+
+/* Layout-components */
+@import 'components/header';
+@import 'components/sidenav';
+
+/* Components */
+@import 'components/buttons';
+
+/* LAYOUT */
+
+#app {
+  height: 100vh;
+  position: relative;
+  width: 100vh
+}

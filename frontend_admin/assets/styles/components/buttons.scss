@@ -1,0 +1,76 @@
+/* BUTTON */
+
+.btn {
+  align-items: center;
+  background-color: transparent;
+  border-color: transparent;
+  color: rgba(33,40,50,.5)!important;
+  display: inline-flex;
+  justify-content: center
+}
+
+.btn-icon {
+  border-radius: 100%;
+  flex-shrink: 0;
+  height: calc(2.625rem + 2px)!important;
+  overflow: hidden;
+  padding: 0;
+  width: calc(2.625rem + 2px)!important
+}
+
+.btn:hover {
+  color: rgba(33,40,50,.5);
+  color: #69707a;
+  text-decoration: none
+}
+
+.btn:focus,.btn:hover {
+  background-color: rgba(33,40,50,.1);
+  border-color: transparent
+}
+
+.btn:focus {
+  box-shadow: 0 0 0 .25rem rgba(33,40,50,.25)!important;
+  color: rgba(33,40,50,.5)
+}
+
+button:not(:disabled) {
+  cursor: pointer
+}
+
+
+/* INPUTGROUP */
+
+.inputgroup {
+  align-items: stretch;
+  background-color: #eef2f8;
+  border: 0;
+  border-radius: .4375rem;
+  color: #69707a;
+  display: flex;
+  flex-wrap: wrap;
+  outline: 0 solid transparent;
+  padding: .475rem 1.125rem;
+  position: relative;
+  transition: outline-color .15s ease-in-out,outline-width .15s ease-in-out
+}
+
+.inputgroup.active {
+  outline: solid 5px var(--bs-primary-soft)
+}
+
+.inputgroup--input {
+  background-color: transparent;
+  border: none;
+  font-size: .9rem;
+  margin-right: .5rem!important
+}
+
+.inputgroup--input:focus {
+  outline: none
+}
+
+.inputgroup--icon {
+  color: #69707a;
+  width: 1rem
+}

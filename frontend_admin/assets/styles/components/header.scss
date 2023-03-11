@@ -1,0 +1,25 @@
+.header {
+  align-items: center;
+  background-color: #fff;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 3.625rem;
+  justify-content: flex-start;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 2
+}
+
+.header .btn-icon {
+  margin-left: .5rem;
+  order: 0
+}
+
+.header__title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-left: .5rem;
+  width: 12rem
+}
