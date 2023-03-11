@@ -14,6 +14,12 @@ export default function () {
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
+    //fetch('http://localhost:5000/api/site/', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{"name":"React JS","url":"https://reactjs.org","type":"web"}'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
+
+    fetch('http://localhost:5000/api/site/3', {method:'PUT', headers:{'Content-Type':'application/json'}, body:'{"name":"Other"}'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
+
+    //fetch('http://localhost:5000/api/site/3', {method:'DELETE'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
+
     fetch('http://localhost:5000/api/sites/', {method: 'GET'})
       .then(response => response.json())
       .then(data => setSitesList(data))
