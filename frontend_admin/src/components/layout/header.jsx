@@ -1,9 +1,10 @@
 import FeatherIcon from 'feather-icons-react';
+import PropTypes from 'prop-types';
 
-export default function Header() {
+export default function Header({toggleSidebar}) {
   return (
     <header className="header shadow">
-      <button className="btn btn-icon">
+      <button className="btn btn-icon" onClick={toggleSidebar}>
         <FeatherIcon icon="menu" size="24" />
       </button>
       <a href="./index.html">
@@ -23,4 +24,8 @@ export default function Header() {
       </form>
     </header>
   );
+}
+
+Header.propTypes = {
+  toggleSidebar: PropTypes.func.isRequired
 }
