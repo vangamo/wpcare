@@ -47,4 +47,23 @@
       padding: 0;
     }
   }
+
+  .editRow {
+    padding: 9px 12px;
+    
+    input {
+      width: 100%;
+      padding: 0.3em 0.4em;
+      border-radius: 5px;
+      border: solid 1px #888;
+      outline-color: var(--bs-secondary);
+      font-size: 1em;
+      transition: outline-color .5s;
+    }
+    
+    input:focus {
+      outline: solid 2px var(--bs-primary);
+    }
+  }
 }
+

@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import './table.scss';
 
@@ -19,9 +19,7 @@ function TableColumns({ columns }) {
   );
 }
 TableColumns.propTypes = {
-  columns: PropTypes.arrayOf(
-    COLUMN_TYPE
-  ).isRequired,
+  columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
 };
 
 const ROW_VALUE_RENDERER = {
@@ -50,9 +48,7 @@ function TableRow({ row, columns, rowIdx }) {
 }
 
 Table.propTypes = {
-  columns: PropTypes.arrayOf(
-    COLUMN_TYPE
-  ).isRequired,
+  columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
   row: DATA_TYPE.isRequired,
   rowIdx: PropTypes.number.idRequired,
 };
@@ -93,15 +89,43 @@ function TableRowList({ data, columns, detailsElement }) {
 }
 
 TableRowList.propTypes = {
-  columns: PropTypes.arrayOf(
-    COLUMN_TYPE
-  ).isRequired,
+  columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
   data: PropTypes.arrayOf(DATA_TYPE).isRequired,
   detailsElement: DETAILS_SECTION_TYPE,
 };
 
-export default function Table({ columns, data, detailsElement }) {
+export default function Table({ columns, data, detailsElement, onSaveNew }) {
+  const [newData, setNewData] = useState({});
+
+  const inputRefs = columns.map(col => useRef(null));
+
+  useEffect(() => {
+    if (onSaveNew) {
+      inputRefs[1].current.focus();
+    }
+  }, [onSaveNew]);
+
+  const handleChangeInputNew = (ev) => {
+    setNewData({...newData, [ev.target.name]: ev.target.value})
+  }
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+
+    if( document.activeElement.tagName === 'INPUT' ) {
+      const focusedInput = document.activeElement
+      const focusedInputIdx = inputRefs.findIndex(input => input.current === focusedInput);
+
+      const nextInputIdx = (focusedInputIdx+1) % 4;
+      inputRefs[nextInputIdx].current.focus();
+    }
+    else {
+      onSaveNew(newData);
+    }
+  };
+
   return (
+    <form onSubmit={handleSubmit}>
     <table className="table" cellspacing="0" cellpadding="0">
       <thead>
         <tr>
@@ -109,16 +133,47 @@ export default function Table({ columns, data, detailsElement }) {
         </tr>
       </thead>
       <tbody>
+        {onSaveNew && (
+          <>
+            <tr>
+              {columns.map((col, idx) => {
+                if (col.type === 'checkbox') {
+                  return (
+                    <td className="editRow" key={'edit-' + idx}>
+                      <button tabIndex={columns.length} ref={inputRefs[idx]}>Save</button>
+                    </td>
+                  );
+                } else if (col.type === 'link') {
+                  return (
+                    <td className="editRow" key={'edit-' + idx}>
+                      <input type="text" style={{width:'50%'}} name={col.col} placeholder={col.heading} tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
+                      <input type="text" style={{width:'50%'}} name={col.colLink} placeholder="Link" tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
+                    </td>
+                  );
+                }
+                else {
+                  return (
+                    <td className="editRow" key={'edit-' + idx}>
+                      <input type="text" name={col.col} placeholder={col.heading} tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
+                    </td>
+                  );
+                }
+              })}
+            </tr>
+            <tr className="table__details collapsed">
+              <td colspan={1 + columns.length}></td>
+            </tr>
+          </>
+        )}
         <TableRowList data={data} columns={columns} detailsElement={detailsElement} />
       </tbody>
     </table>
+    </form>
   );
 }
 
 Table.propTypes = {
-  columns: PropTypes.arrayOf(
-    COLUMN_TYPE
-  ).isRequired,
+  columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
   data: PropTypes.arrayOf(DATA_TYPE).isRequired,
   detailsElement: DETAILS_SECTION_TYPE,
 };

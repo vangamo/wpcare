@@ -1,17 +1,30 @@
+import { useState } from 'preact/hooks';
 import FeatherIcon from 'feather-icons-react';
 import Page from '../../layout/page';
 import Table from '../../table/table';
 import './sites.scss';
 
 export default function () {
+  const [isShownEditRow, setShownEditRow] = useState(false);
+  const handleSaveSite = (data) => {
+    setShownEditRow(false);
+    console.log(data);
+  }
   return (
     <Page name='Sites' title='Sites' description='Listing all sites'>
       <div className='row-1'>
         <div className='box'>
-          <h3 className='box__title'>Sites</h3>
-          <div className="box__actions"><FeatherIcon icon="file-plus" size="24" /></div>
+          <div className="box__title">
+            <h3 className='box__title__text'>Sites</h3>
+            <div className='box__title__toolbox'>
+              <button onClick={()=>setShownEditRow(!isShownEditRow)}>
+                <FeatherIcon icon="file-plus" size="24"/>
+              </button>
+            </div>
+          </div>
           <div className='box__content'>
             <Table
+              onSaveNew={isShownEditRow && handleSaveSite}
               data={[
                 {
                   name: 'Python',
