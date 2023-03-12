@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@preact/preset-vite': ^2.5.0
+  feather-icons-react: ^0.6.2
   preact: ^10.11.3
   prop-types: ^15.8.1
   sass: ^1.59.2
@@ -12,6 +13,7 @@ dependencies:
 
 devDependencies:
   '@preact/preset-vite': 2.5.0_preact@10.13.1+vite@4.1.4
+  feather-icons-react: 0.6.2
   prop-types: 15.8.1
   sass: 1.59.2
   vite: 4.1.4_sass@1.59.2
@@ -705,6 +707,12 @@ packages:
 
   /estree-walker/2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
+    dev: true
+
+  /feather-icons-react/0.6.2:
+    resolution: {integrity: sha512-G677Y5nc3HzP1f5NNb5LJuZwKrI58BK4+/9O8Bl4naF9JixC+YL4trVom1F2ajnilq/EbU8JETPTNqvCzwH1qA==}
+    peerDependencies:
+      react: '>= 16.8.4'
     dev: true
 
   /fill-range/7.0.1:

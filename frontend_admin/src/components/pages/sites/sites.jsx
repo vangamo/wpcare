@@ -1,3 +1,4 @@
+import FeatherIcon from 'feather-icons-react';
 import Page from '../../layout/page';
 import Table from '../../table/table';
 import './sites.scss';
@@ -8,6 +9,7 @@ export default function () {
       <div className='row-1'>
         <div className='box'>
           <h3 className='box__title'>Sites</h3>
+          <div className="box__actions"><FeatherIcon icon="file-plus" size="24" /></div>
           <div className='box__content'>
             <Table
               data={[
