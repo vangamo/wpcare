@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { COLUMN_TYPE } from './tableTypes';
 
 export default function TableHeaderColumns({ columns }) {
   return columns.map((col, idx) =>
