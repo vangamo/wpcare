@@ -14,3 +14,18 @@ export const DETAILS_SECTION_TYPE = PropTypes.oneOfType([
   PropTypes.node,
   PropTypes.func,
 ]);
+
+export const ROW_VALUE_RENDERERS = {
+  id: (rowValues, columnDef) => {
+    return <input type="checkbox" />;
+  },
+  link: (rowValues, columnDef) => {
+    return <a href={rowValues[columnDef.colLink]}>{rowValues[columnDef.col]}</a>;
+  },
+  text: (rowValues, columnDef) => {
+    return rowValues[columnDef.col];
+  },
+  datetime: (rowValues, columnDef) => {
+    return rowValues[columnDef.col];
+  },
+};

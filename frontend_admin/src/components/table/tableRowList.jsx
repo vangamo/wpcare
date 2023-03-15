@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
+import TableEditableRow from './tableEditableRow';
 import TableRow from './tableRow';
 import { COLUMN_TYPE, DATA_TYPE, DETAILS_SECTION_TYPE } from './tableTypes';
 
@@ -30,9 +31,26 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
   };
 
   const handleClickDelete = ({ currentTarget }) => {
-    const clickedRowId = parseInt(currentTarget.dataset.rowId);
+    const clickedRowId = parseInt(currentTarget.dataset.rowid);
 
     onDelete(clickedRowId);
+  };
+
+  const handleSave = (updateRowIdx, newData, row) => {
+    if (!newData) {
+      setEditableRows(editableRows.filter((i) => i !== updateRowIdx));
+      return;
+    }
+
+    const isPromise = onUpdate(newData, row);
+
+    if (isPromise?.then) {
+      isPromise.then(() => {
+        setEditableRows(editableRows.filter((i) => i !== updateRowIdx));
+      });
+    } else {
+      setEditableRows(editableRows.filter((i) => i !== updateRowIdx));
+    }
   };
 
   const callDetailsRenderer = (row, idx) => {
@@ -46,29 +64,31 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
   return data.map((row, idx) => (
     <>
       <tr key={'row-' + idx} data-key={idx} onClick={detailsElement && handleClickRow} title="Click to show details">
-        <TableRow
-          row={row}
-          columns={columns}
-          rowIdx={idx}
-          editable={editableRows.includes(idx)}
-          onSave={onUpdate}
-          actions={
-            (onUpdate || onDelete) && (
-              <>
-                {onUpdate && (
-                  <button onClick={handleClickEdit} data-key={idx}>
-                    edit
-                  </button>
-                )}
-                {onDelete && (
-                  <button onClick={handleClickDelete} data-rowId={row.id}>
-                    del
-                  </button>
-                )}
-              </>
-            )
-          }
-        />
+        {editableRows.includes(idx) ? (
+          <TableEditableRow row={row} columns={columns} rowIdx={idx} onSave={handleSave} />
+        ) : (
+          <TableRow
+            row={row}
+            columns={columns}
+            rowIdx={idx}
+            actions={
+              (onUpdate || onDelete) && (
+                <>
+                  {onUpdate && (
+                    <button onClick={handleClickEdit} data-key={idx}>
+                      edit
+                    </button>
+                  )}
+                  {onDelete && (
+                    <button onClick={handleClickDelete} data-rowid={row.id}>
+                      del
+                    </button>
+                  )}
+                </>
+              )
+            }
+          />
+        )}
       </tr>
       <tr key={'row-detail-' + idx} className={'table__details ' + (!openRows.includes(idx) && 'collapsed')}>
         <td colspan={1 + columns.length}>{callDetailsRenderer(row, idx)}</td>

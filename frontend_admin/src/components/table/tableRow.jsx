@@ -1,36 +1,12 @@
 import PropTypes from 'prop-types';
-import { COLUMN_TYPE, DATA_TYPE } from './tableTypes';
+import { ROW_VALUE_RENDERERS, COLUMN_TYPE, DATA_TYPE } from './tableTypes';
 
-const ROW_VALUE_RENDERER = {
-  id: (rowValues, columnDef) => {
-    return <input type="checkbox" />;
-  },
-  link: (rowValues, columnDef) => {
-    return <a href={rowValues[columnDef.colLink]}>{rowValues[columnDef.col]}</a>;
-  },
-  text: (rowValues, columnDef) => {
-    return rowValues[columnDef.col];
-  },
-  datetime: (rowValues, columnDef) => {
-    return rowValues[columnDef.col];
-  },
-};
-
-export default function TableRow({ row, columns, rowIdx, actions, editable, onSave }) {
-  ROW_VALUE_RENDERER.actions = () => actions;
-
-  const handleClick = (ev) => {
-    onSave(row.id, row);
-  };
-
-  const handleInput = ({ currentTarget }) => {};
+export default function TableRow({ row, columns, rowIdx, actions }) {
+  const RENDERER = { ...ROW_VALUE_RENDERERS, actions: () => actions };
 
   return columns.map((columnDef, colIdx) => (
-    <td key={'row-value-' + rowIdx + '-' + colIdx} className={editable && 'editRow'}>
-      {editable && colIdx === 0 && <button onClick={handleClick}>Save</button>}
-      {editable && colIdx !== 0 && <input type="text" onInput={handleInput} value={row[columnDef.col]} />}
-      {!editable && ROW_VALUE_RENDERER[columnDef.type] && ROW_VALUE_RENDERER[columnDef.type](row, columnDef)}
-      {!editable && !ROW_VALUE_RENDERER[columnDef.type] && ROW_VALUE_RENDERER['text'](row, columnDef)}
+    <td key={'row-value-' + rowIdx + '-' + colIdx}>
+      {RENDERER[columnDef.type] ? RENDERER[columnDef.type](row, columnDef) : RENDERER['text'](row, columnDef)}
     </td>
   ));
 }
@@ -40,6 +16,4 @@ TableRow.propTypes = {
   columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
   rowIdx: PropTypes.number.idRequired,
   actions: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
-  editable: PropTypes.bool,
-  onSave: PropTypes.func,
 };
