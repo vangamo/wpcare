@@ -54,7 +54,7 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
           onSave={onUpdate}
           actions={
             (onUpdate || onDelete) && (
-              <td>
+              <>
                 {onUpdate && (
                   <button onClick={handleClickEdit} data-key={idx}>
                     edit
@@ -65,7 +65,7 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
                     del
                   </button>
                 )}
-              </td>
+              </>
             )
           }
         />

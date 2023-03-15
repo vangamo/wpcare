@@ -33,18 +33,21 @@ export default function () {
               }}
               data={[
                 {
+                  id: 1,
                   name: 'Python',
                   url: 'https://www.python.org/',
                   type: 'web',
                   lastAccess: '1 day',
                 },
                 {
+                  id: 2,
                   name: 'Preact',
                   url: 'https://preactjs.com/',
                   type: 'web',
                   lastAccess: '3 days',
                 },
                 {
+                  id: 3,
                   name: 'Wordpress news',
                   url: 'https://wordpress.org/news/',
                   type: 'WP',
@@ -52,7 +55,7 @@ export default function () {
                 },
               ]}
               columns={[
-                { type: 'checkbox' },
+                { type: 'id' },
                 { heading: 'Name', type: 'link', col: 'name', colLink: 'url' },
                 { heading: 'Type', type: 'text', col: 'type' },
                 { heading: 'Last access', type: 'datetime', col: 'lastAccess' },

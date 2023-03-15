@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { COLUMN_TYPE, DATA_TYPE } from './tableTypes';
 
 const ROW_VALUE_RENDERER = {
-  checkbox: (rowValues, columnDef) => {
+  id: (rowValues, columnDef) => {
     return <input type="checkbox" />;
   },
   link: (rowValues, columnDef) => {
@@ -17,13 +17,15 @@ const ROW_VALUE_RENDERER = {
 };
 
 export default function TableRow({ row, columns, rowIdx, actions, editable, onSave }) {
+  ROW_VALUE_RENDERER.actions = () => actions;
+
   const handleClick = (ev) => {
     onSave(row.id, row);
   };
 
   const handleInput = ({ currentTarget }) => {};
 
-  const rowColumns = columns.map((columnDef, colIdx) => (
+  return columns.map((columnDef, colIdx) => (
     <td key={'row-' + rowIdx + colIdx} className={editable && 'editRow'}>
       {editable && colIdx === 0 && <button onClick={handleClick}>Save</button>}
       {editable && colIdx !== 0 && <input type="text" onInput={handleInput} value={row[columnDef.col]} />}
@@ -31,13 +33,6 @@ export default function TableRow({ row, columns, rowIdx, actions, editable, onSa
       {!editable && !ROW_VALUE_RENDERER[columnDef.type] && ROW_VALUE_RENDERER['text'](row, columnDef)}
     </td>
   ));
-
-  return (
-    <>
-      {rowColumns}
-      {actions}
-    </>
-  );
 }
 
 TableRow.propTypes = {

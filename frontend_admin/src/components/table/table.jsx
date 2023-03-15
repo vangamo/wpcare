@@ -7,6 +7,16 @@ import { COLUMN_TYPE, DATA_TYPE, DETAILS_SECTION_TYPE } from './tableTypes';
 import './table.scss';
 
 export default function Table({ columns, data, detailsElement, onCreate, onUpdate, onDelete }) {
+  const columnIdIndex = columns.findIndex((col) => col.type === 'id');
+
+  if (columnIdIndex === -1) {
+    onUpdate = null;
+    onDelete = null;
+  } else {
+    const columnId = columns.splice(columnIdIndex, 1)[0];
+    columns.unshift(columnId);
+  }
+
   const [newData, setNewData] = useState({});
 
   const inputRefs = columns.map((col) => useRef(null));
@@ -37,13 +47,16 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
     }
   };
 
+  if (onUpdate || onDelete) {
+    columns.push({ type: 'actions', heading: 'Actions' });
+  }
+
   return (
     <form onSubmit={handleSubmit}>
       <table className="table" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
             <TableHeaderColumns columns={columns} />
-            {(onUpdate || onDelete) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
