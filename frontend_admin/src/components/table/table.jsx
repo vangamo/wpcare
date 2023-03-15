@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
+
+import TableHeaderColumns from './tableHeaderColumns';
 import './table.scss';
 
 const COLUMN_TYPE = PropTypes.exact({
@@ -12,15 +14,6 @@ const COLUMN_TYPE = PropTypes.exact({
 const DATA_TYPE = PropTypes.object;
 
 const DETAILS_SECTION_TYPE = PropTypes.oneOfType([PropTypes.element, PropTypes.string, PropTypes.node, PropTypes.func]);
-
-function TableColumns({ columns }) {
-  return columns.map((col, idx) =>
-    col.type === 'checkbox' ? <th key={'col-' + idx}></th> : <th key={'col-' + idx}>{col.heading}</th>
-  );
-}
-TableColumns.propTypes = {
-  columns: PropTypes.arrayOf(COLUMN_TYPE).isRequired,
-};
 
 const ROW_VALUE_RENDERER = {
   checkbox: (rowValues, columnDef) => {
@@ -181,7 +174,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
       <table className="table" cellspacing="0" cellpadding="0">
         <thead>
           <tr>
-            <TableColumns columns={columns} />
+            <TableHeaderColumns columns={columns} />
             {(onUpdate || onDelete) && <th>Actions</th>}
           </tr>
         </thead>
