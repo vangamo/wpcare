@@ -8,6 +8,7 @@ import './table.scss';
 
 export default function Table({ columns, data, detailsElement, onCreate, onUpdate, onDelete }) {
   const columnIdIndex = columns.findIndex((col) => col.type === 'id');
+  const hasColumnActions = columns.some((col) => col.type === 'actions');
 
   if (columnIdIndex === -1) {
     onUpdate = null;
@@ -19,7 +20,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
 
   const [newData, setNewData] = useState({});
 
-  const inputRefs = columns.map((col) => useRef(null));
+  const inputRefs = columns.map(() => useRef(null));
 
   useEffect(() => {
     if (onCreate) {
@@ -47,7 +48,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
     }
   };
 
-  if (onUpdate || onDelete) {
+  if ((onUpdate || onDelete) && !hasColumnActions) {
     columns.push({ type: 'actions', heading: 'Actions' });
   }
 
@@ -64,7 +65,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
             <>
               <tr>
                 {columns.map((col, idx) => {
-                  if (col.type === 'checkbox') {
+                  if (col.type === 'id') {
                     return (
                       <td className="editRow" key={'row-new-' + idx}>
                         <button tabIndex={columns.length} ref={inputRefs[idx]}>
