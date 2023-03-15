@@ -37,14 +37,26 @@ const ROW_VALUE_RENDERER = {
   },
 };
 
-function TableRow({ row, columns, rowIdx }) {
-  return columns.map((columnDef, colIdx) => (
-    <td key={'row-' + rowIdx + colIdx}>
-      {ROW_VALUE_RENDERER[columnDef.type]
-        ? ROW_VALUE_RENDERER[columnDef.type](row, columnDef)
-        : ROW_VALUE_RENDERER['text'](row, columnDef)}
+function TableRow({ row, columns, rowIdx, actions, editable, onSave }) {
+  const handleClick = (ev) => {
+    onSave(row.id, row);
+  };
+  const handleInput = ({ currentTarget }) => {};
+  const rowColumns = columns.map((columnDef, colIdx) => (
+    <td key={'row-' + rowIdx + colIdx} className={editable && 'editRow'}>
+      {editable && colIdx === 0 && <button onClick={handleClick}>Save</button>}
+      {editable && colIdx !== 0 && <input type="text" onInput={handleInput} value={row[columnDef.col]} />}
+      {!editable && ROW_VALUE_RENDERER[columnDef.type] && ROW_VALUE_RENDERER[columnDef.type](row, columnDef)}
+      {!editable && !ROW_VALUE_RENDERER[columnDef.type] && ROW_VALUE_RENDERER['text'](row, columnDef)}
     </td>
   ));
+
+  return (
+    <>
+      {rowColumns}
+      {actions}
+    </>
+  );
 }
 
 Table.propTypes = {
@@ -53,11 +65,12 @@ Table.propTypes = {
   rowIdx: PropTypes.number.idRequired,
 };
 
-function TableRowList({ data, columns, detailsElement }) {
+function TableRowList({ data, columns, detailsElement, onUpdate, onDelete }) {
   const [openRows, setOpenRows] = useState([]);
+  const [editableRows, setEditableRows] = useState([]);
 
   const handleClickRow = ({ target, currentTarget }) => {
-    if (target.tagName !== 'A') {
+    if (target.tagName !== 'A' && target.tagName !== 'BUTTON') {
       const clickedRowIndex = parseInt(currentTarget.dataset.key);
 
       if (openRows.includes(clickedRowIndex)) {
@@ -66,6 +79,22 @@ function TableRowList({ data, columns, detailsElement }) {
         setOpenRows([...openRows, clickedRowIndex]);
       }
     }
+  };
+
+  const handleClickEdit = ({ currentTarget }) => {
+    const clickedRowIndex = parseInt(currentTarget.dataset.key);
+
+    if (editableRows.includes(clickedRowIndex)) {
+      setEditableRows(editableRows.filter((i) => i !== clickedRowIndex));
+    } else {
+      setEditableRows([...editableRows, clickedRowIndex]);
+    }
+  };
+
+  const handleClickDelete = ({ currentTarget }) => {
+    const clickedRowId = parseInt(currentTarget.dataset.rowId);
+
+    onDelete(clickedRowId);
   };
 
   const callDetailsRenderer = (row, idx) => {
@@ -79,7 +108,29 @@ function TableRowList({ data, columns, detailsElement }) {
   return data.map((row, idx) => (
     <>
       <tr key={idx} data-key={idx} onClick={detailsElement && handleClickRow} title="Click to show details">
-        <TableRow row={row} columns={columns} idx={idx} />
+        <TableRow
+          row={row}
+          columns={columns}
+          idx={idx}
+          editable={editableRows.includes(idx)}
+          onSave={onUpdate}
+          actions={
+            (onUpdate || onDelete) && (
+              <td>
+                {onUpdate && (
+                  <button onClick={handleClickEdit} data-key={idx}>
+                    edit
+                  </button>
+                )}
+                {onDelete && (
+                  <button onClick={handleClickDelete} data-rowId={row.id}>
+                    del
+                  </button>
+                )}
+              </td>
+            )
+          }
+        />
       </tr>
       <tr key={idx + '-detail'} className={'table__details ' + (!openRows.includes(idx) && 'collapsed')}>
         <td colspan={1 + columns.length}>{callDetailsRenderer(row, idx)}</td>
@@ -94,7 +145,7 @@ TableRowList.propTypes = {
   detailsElement: DETAILS_SECTION_TYPE,
 };
 
-export default function Table({ columns, data, detailsElement, onCreate }) {
+export default function Table({ columns, data, detailsElement, onCreate, onUpdate, onDelete }) {
   const [newData, setNewData] = useState({});
 
   const inputRefs = columns.map((col) => useRef(null));
@@ -112,14 +163,16 @@ export default function Table({ columns, data, detailsElement, onCreate }) {
   const handleSubmit = (ev) => {
     ev.preventDefault();
 
-    if (document.activeElement.tagName === 'INPUT') {
-      const focusedInput = document.activeElement;
-      const focusedInputIdx = inputRefs.findIndex((input) => input.current === focusedInput);
+    if (onCreate) {
+      if (document.activeElement.tagName === 'INPUT') {
+        const focusedInput = document.activeElement;
+        const focusedInputIdx = inputRefs.findIndex((input) => input.current === focusedInput);
 
-      const nextInputIdx = (focusedInputIdx + 1) % 4;
-      inputRefs[nextInputIdx].current.focus();
-    } else {
-      onCreate(newData);
+        const nextInputIdx = (focusedInputIdx + 1) % 4;
+        inputRefs[nextInputIdx].current.focus();
+      } else {
+        onCreate(newData);
+      }
     }
   };
 
@@ -129,6 +182,7 @@ export default function Table({ columns, data, detailsElement, onCreate }) {
         <thead>
           <tr>
             <TableColumns columns={columns} />
+            {(onUpdate || onDelete) && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -188,7 +242,13 @@ export default function Table({ columns, data, detailsElement, onCreate }) {
               </tr>
             </>
           )}
-          <TableRowList data={data} columns={columns} detailsElement={detailsElement} />
+          <TableRowList
+            data={data}
+            columns={columns}
+            detailsElement={detailsElement}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+          />
         </tbody>
       </table>
     </form>

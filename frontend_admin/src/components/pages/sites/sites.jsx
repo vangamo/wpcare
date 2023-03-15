@@ -25,8 +25,12 @@ export default function () {
           <div className="box__content">
             <Table
               onCreate={isShownEditRow && handleSaveSite}
-              onUpdate={() => {}}
-              onDelete={() => {}}
+              onUpdate={(id, data) => {
+                console.log('Edit', id, data);
+              }}
+              onDelete={(id) => {
+                console.log('Delete', id);
+              }}
               data={[
                 {
                   name: 'Python',
