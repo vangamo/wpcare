@@ -94,80 +94,103 @@ TableRowList.propTypes = {
   detailsElement: DETAILS_SECTION_TYPE,
 };
 
-export default function Table({ columns, data, detailsElement, onSaveNew }) {
+export default function Table({ columns, data, detailsElement, onCreate }) {
   const [newData, setNewData] = useState({});
 
-  const inputRefs = columns.map(col => useRef(null));
+  const inputRefs = columns.map((col) => useRef(null));
 
   useEffect(() => {
-    if (onSaveNew) {
+    if (onCreate) {
       inputRefs[1].current.focus();
     }
-  }, [onSaveNew]);
+  }, [onCreate]);
 
   const handleChangeInputNew = (ev) => {
-    setNewData({...newData, [ev.target.name]: ev.target.value})
-  }
+    setNewData({ ...newData, [ev.target.name]: ev.target.value });
+  };
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
 
-    if( document.activeElement.tagName === 'INPUT' ) {
-      const focusedInput = document.activeElement
-      const focusedInputIdx = inputRefs.findIndex(input => input.current === focusedInput);
+    if (document.activeElement.tagName === 'INPUT') {
+      const focusedInput = document.activeElement;
+      const focusedInputIdx = inputRefs.findIndex((input) => input.current === focusedInput);
 
-      const nextInputIdx = (focusedInputIdx+1) % 4;
+      const nextInputIdx = (focusedInputIdx + 1) % 4;
       inputRefs[nextInputIdx].current.focus();
-    }
-    else {
-      onSaveNew(newData);
+    } else {
+      onCreate(newData);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-    <table className="table" cellspacing="0" cellpadding="0">
-      <thead>
-        <tr>
-          <TableColumns columns={columns} />
-        </tr>
-      </thead>
-      <tbody>
-        {onSaveNew && (
-          <>
-            <tr>
-              {columns.map((col, idx) => {
-                if (col.type === 'checkbox') {
-                  return (
-                    <td className="editRow" key={'edit-' + idx}>
-                      <button tabIndex={columns.length} ref={inputRefs[idx]}>Save</button>
-                    </td>
-                  );
-                } else if (col.type === 'link') {
-                  return (
-                    <td className="editRow" key={'edit-' + idx}>
-                      <input type="text" style={{width:'50%'}} name={col.col} placeholder={col.heading} tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
-                      <input type="text" style={{width:'50%'}} name={col.colLink} placeholder="Link" tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
-                    </td>
-                  );
-                }
-                else {
-                  return (
-                    <td className="editRow" key={'edit-' + idx}>
-                      <input type="text" name={col.col} placeholder={col.heading} tabIndex={idx} ref={inputRefs[idx]} onInput={handleChangeInputNew} />
-                    </td>
-                  );
-                }
-              })}
-            </tr>
-            <tr className="table__details collapsed">
-              <td colspan={1 + columns.length}></td>
-            </tr>
-          </>
-        )}
-        <TableRowList data={data} columns={columns} detailsElement={detailsElement} />
-      </tbody>
-    </table>
+      <table className="table" cellspacing="0" cellpadding="0">
+        <thead>
+          <tr>
+            <TableColumns columns={columns} />
+          </tr>
+        </thead>
+        <tbody>
+          {onCreate && (
+            <>
+              <tr>
+                {columns.map((col, idx) => {
+                  if (col.type === 'checkbox') {
+                    return (
+                      <td className="editRow" key={'edit-' + idx}>
+                        <button tabIndex={columns.length} ref={inputRefs[idx]}>
+                          Save
+                        </button>
+                      </td>
+                    );
+                  } else if (col.type === 'link') {
+                    return (
+                      <td className="editRow" key={'edit-' + idx}>
+                        <input
+                          type="text"
+                          style={{ width: '50%' }}
+                          name={col.col}
+                          placeholder={col.heading}
+                          tabIndex={idx}
+                          ref={inputRefs[idx]}
+                          onInput={handleChangeInputNew}
+                        />
+                        <input
+                          type="text"
+                          style={{ width: '50%' }}
+                          name={col.colLink}
+                          placeholder="Link"
+                          tabIndex={idx}
+                          ref={inputRefs[idx]}
+                          onInput={handleChangeInputNew}
+                        />
+                      </td>
+                    );
+                  } else {
+                    return (
+                      <td className="editRow" key={'edit-' + idx}>
+                        <input
+                          type="text"
+                          name={col.col}
+                          placeholder={col.heading}
+                          tabIndex={idx}
+                          ref={inputRefs[idx]}
+                          onInput={handleChangeInputNew}
+                        />
+                      </td>
+                    );
+                  }
+                })}
+              </tr>
+              <tr className="table__details collapsed">
+                <td colspan={1 + columns.length}></td>
+              </tr>
+            </>
+          )}
+          <TableRowList data={data} columns={columns} detailsElement={detailsElement} />
+        </tbody>
+      </table>
     </form>
   );
 }

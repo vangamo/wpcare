@@ -1,9 +1,9 @@
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
 import PropTypes from 'prop-types';
 
-export default function Menu({showMenu}) {
+export default function Menu({ showMenu }) {
   return (
-    <section className={"sidenav shadow-right " + (!showMenu && "hidden")}>
+    <section className={'sidenav shadow-right ' + (!showMenu && 'hidden')}>
       <nav className="sidenav_menu">
         <div className="sidenav__menuheading">Overview</div>
         <a className="sidenav__menulink active" href="#" aria-current="page">
@@ -57,5 +57,5 @@ export default function Menu({showMenu}) {
 }
 
 Menu.propTypes = {
-  showMenu: PropTypes.bool
-}
+  showMenu: PropTypes.bool,
+};

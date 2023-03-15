@@ -9,22 +9,24 @@ export default function () {
   const handleSaveSite = (data) => {
     setShownEditRow(false);
     console.log(data);
-  }
+  };
   return (
-    <Page name='Sites' title='Sites' description='Listing all sites'>
-      <div className='row-1'>
-        <div className='box'>
+    <Page name="Sites" title="Sites" description="Listing all sites">
+      <div className="row-1">
+        <div className="box">
           <div className="box__title">
-            <h3 className='box__title__text'>Sites</h3>
-            <div className='box__title__toolbox'>
-              <button onClick={()=>setShownEditRow(!isShownEditRow)}>
-                <FeatherIcon icon="file-plus" size="24"/>
+            <h3 className="box__title__text">Sites</h3>
+            <div className="box__title__toolbox">
+              <button onClick={() => setShownEditRow(!isShownEditRow)}>
+                <FeatherIcon icon="file-plus" size="24" />
               </button>
             </div>
           </div>
-          <div className='box__content'>
+          <div className="box__content">
             <Table
-              onSaveNew={isShownEditRow && handleSaveSite}
+              onCreate={isShownEditRow && handleSaveSite}
+              onUpdate={() => {}}
+              onDelete={() => {}}
               data={[
                 {
                   name: 'Python',

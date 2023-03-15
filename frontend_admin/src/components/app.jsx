@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks'
+import { useState } from 'preact/hooks';
 
 import Header from './layout/header';
 import Menu from './layout/menu';
@@ -10,15 +10,15 @@ export function App() {
 
   const handleToggleSidebar = () => {
     setSidenavShown(!isSidenavShown);
-  }
+  };
 
   return (
     <>
-      <Header toggleSidebar={handleToggleSidebar}/>
-      <Menu showMenu={isSidenavShown}/>
+      <Header toggleSidebar={handleToggleSidebar} />
+      <Menu showMenu={isSidenavShown} />
       <main className="main">
-        <Sites/>
+        <Sites />
       </main>
     </>
-  )
+  );
 }
