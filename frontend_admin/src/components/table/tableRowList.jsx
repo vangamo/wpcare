@@ -45,11 +45,11 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
 
   return data.map((row, idx) => (
     <>
-      <tr key={idx} data-key={idx} onClick={detailsElement && handleClickRow} title="Click to show details">
+      <tr key={'row-' + idx} data-key={idx} onClick={detailsElement && handleClickRow} title="Click to show details">
         <TableRow
           row={row}
           columns={columns}
-          idx={idx}
+          rowIdx={idx}
           editable={editableRows.includes(idx)}
           onSave={onUpdate}
           actions={
@@ -70,7 +70,7 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
           }
         />
       </tr>
-      <tr key={idx + '-detail'} className={'table__details ' + (!openRows.includes(idx) && 'collapsed')}>
+      <tr key={'row-detail-' + idx} className={'table__details ' + (!openRows.includes(idx) && 'collapsed')}>
         <td colspan={1 + columns.length}>{callDetailsRenderer(row, idx)}</td>
       </tr>
     </>

@@ -66,7 +66,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
                 {columns.map((col, idx) => {
                   if (col.type === 'checkbox') {
                     return (
-                      <td className="editRow" key={'edit-' + idx}>
+                      <td className="editRow" key={'row-new-' + idx}>
                         <button tabIndex={columns.length} ref={inputRefs[idx]}>
                           Save
                         </button>
@@ -74,7 +74,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
                     );
                   } else if (col.type === 'link') {
                     return (
-                      <td className="editRow" key={'edit-' + idx}>
+                      <td className="editRow" key={'row-new-' + idx}>
                         <input
                           type="text"
                           style={{ width: '50%' }}
@@ -97,7 +97,7 @@ export default function Table({ columns, data, detailsElement, onCreate, onUpdat
                     );
                   } else {
                     return (
-                      <td className="editRow" key={'edit-' + idx}>
+                      <td className="editRow" key={'row-new-' + idx}>
                         <input
                           type="text"
                           name={col.col}

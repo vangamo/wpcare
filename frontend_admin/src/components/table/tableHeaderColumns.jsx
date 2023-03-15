@@ -3,7 +3,7 @@ import { COLUMN_TYPE } from './tableTypes';
 
 export default function TableHeaderColumns({ columns }) {
   return columns.map((col, idx) =>
-    col.type === 'checkbox' ? <th key={'col-' + idx}></th> : <th key={'col-' + idx}>{col.heading}</th>
+    col.type === 'checkbox' ? <th key={'row-header-' + idx}></th> : <th key={'row-header-' + idx}>{col.heading}</th>
   );
 }
 TableHeaderColumns.propTypes = {
