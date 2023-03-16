@@ -108,7 +108,7 @@ class Sites_DB(DB):
 
     for field in ['name', 'url', 'type']:
       if field in data:
-        fields_chunk += field+'=%s'+SEPARATOR
+        fields_chunk += SEPARATOR+field+'=%s'
         values.append(data[field])
         SEPARATOR = ', '
 

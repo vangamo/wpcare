@@ -17,12 +17,6 @@ export default function () {
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
-    //fetch('http://localhost:5000/api/site/', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{"name":"React JS","url":"https://reactjs.org","type":"web"}'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
-
-    //fetch('http://localhost:5000/api/site/3', {method:'PUT', headers:{'Content-Type':'application/json'}, body:'{"name":"Other"}'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
-
-    //fetch('http://localhost:5000/api/site/3', {method:'DELETE'}).then(response=>{console.dir(response);return response.json()}).then(data=>console.log(data));
-
     fetch('http://localhost:5000/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
@@ -37,7 +31,44 @@ export default function () {
 
   const handleSaveSite = (data) => {
     setShownEditRow(false);
-    console.log(data);
+    console.log('Create', data);
+
+    fetch('http://localhost:5000/api/site/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        console.dir(response);
+        return response.json();
+      })
+      .then((data) => console.log(data));
+  };
+
+  const handleUpdateSite = (newData, oldData) => {
+    console.log('Edit', { newData, oldData });
+
+    fetch('http://localhost:5000/api/site/' + oldData.id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newData),
+    })
+      .then((response) => {
+        console.dir(response);
+        return response.json();
+      })
+      .then((data) => console.log(data));
+  };
+
+  const handleDeleteSite = (id) => {
+    console.log('Delete', id);
+
+    fetch('http://localhost:5000/api/site/' + id, { method: 'DELETE' })
+      .then((response) => {
+        console.dir(response);
+        return response.json();
+      })
+      .then((data) => console.log(data));
   };
 
   return (
@@ -60,12 +91,8 @@ export default function () {
             {listStatus === 'ok' && (
               <Table
                 onCreate={isShownEditRow && handleSaveSite}
-                onUpdate={(id, data) => {
-                  console.log('Edit', id, data);
-                }}
-                onDelete={(id) => {
-                  console.log('Delete', id);
-                }}
+                onUpdate={handleUpdateSite}
+                onDelete={handleDeleteSite}
                 data={sitesList}
                 columns={SITES_COLUMNS}
                 detailsElement={(data) => <p>Details of {data.name} page</p>}
