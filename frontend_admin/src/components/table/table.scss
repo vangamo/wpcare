@@ -1,4 +1,12 @@
 .table {
+  width: calc(100% - 1em);
+  margin: 1em 0.5em;
+
+  @media (min-width: 1280px) {
+    width: 90%;
+    margin: 1em auto 3em;
+  }
+
   thead tr th {
     background-color: #fff;
     border-bottom: 1px solid #69707a;
@@ -37,7 +45,8 @@
     }
 
     & td > * {
-      transition-property: height, margin, padding;transition-timing-function: ease;
+      transition-property: height, margin, padding;
+      transition-timing-function: ease;
       transition-duration: 0.4s;
     }
 
@@ -45,6 +54,24 @@
       height: 0;
       margin: 0;
       padding: 0;
+    }
+  }
+
+  .editRow {
+    padding: 9px 12px;
+
+    input {
+      width: 100%;
+      padding: 0.3em 0.4em;
+      border-radius: 5px;
+      border: solid 1px #888;
+      outline-color: var(--bs-secondary);
+      font-size: 1em;
+      transition: outline-color 0.5s;
+    }
+
+    input:focus {
+      outline: solid 2px var(--bs-primary);
     }
   }
 }
