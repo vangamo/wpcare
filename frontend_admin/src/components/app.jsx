@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks';
+import { Routes, Route } from 'react-router-dom';
 
 import Header from './layout/header';
 import Menu from './layout/menu';
@@ -17,7 +18,9 @@ export function App() {
       <Header toggleSidebar={handleToggleSidebar} />
       <Menu showMenu={isSidenavShown} />
       <main className="main">
-        <Sites />
+        <Routes>
+          <Route path="/" element={<Sites />} />
+        </Routes>
       </main>
     </>
   );
