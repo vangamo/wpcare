@@ -17,7 +17,9 @@ export function App() {
       <Header toggleSidebar={handleToggleSidebar} />
       <Menu showMenu={isSidenavShown} />
       <main className="main">
-        <Sites />
+        <Routes>
+          <Route path="/" element={<Sites />} />
+        </Routes>
       </main>
     </>
   );
