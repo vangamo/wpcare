@@ -47,6 +47,13 @@ export default function Menu({ showMenu }) {
           </span>
         </a>
         <div className="sidenav__menuheading">Tests</div>
+        <div className="sidenav__menuheading">Tools</div>
+        <a className="sidenav__menulink" href="/backup">
+          <span className="sidenav__menulink--icon">
+            <FeatherIcon icon="package" size="24" />
+          </span>
+          Import/Export
+        </a>
       </nav>
       <dl className="sidenav_footer">
         <dt className="sidenav_footer--subtitle">Logged in as:</dt>
