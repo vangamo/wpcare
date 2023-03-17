@@ -11,6 +11,21 @@ const downloadContent = (filename, content, mime = MIME_TYPE) => {
 };
 
 export default function backupTool() {
+  const handleImport = (data) => {
+    for (const eachSite of data) {
+      console.log('Creating', eachSite);
+      fetch('http://localhost:5000/api/site/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(eachSite),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => console.log(data));
+    }
+  };
+
   const handleClickExport = () => {
     fetch('http://localhost:5000/api/sites/', { method: 'GET' })
       .then((response) => response.json())
@@ -24,6 +39,18 @@ export default function backupTool() {
         }
       });
   };
+
+  const fr = new FileReader();
+  fr.onload = () => {
+    const jsonData = JSON.parse(fr.result);
+    handleImport(jsonData);
+  };
+
+  const handleChangeImport = (ev) => {
+    console.dir(ev);
+    fr.readAsText(ev.target.files[0]);
+  };
+
   return (
     <Page name="Sites" title="Backup tools" description="Manage your data">
       <div className="row-1">
@@ -34,6 +61,16 @@ export default function backupTool() {
           </div>
           <div className="box__content">
             <button onClick={handleClickExport}>Export now</button>
+          </div>
+        </div>
+        <div className="box">
+          <div className="box__title">
+            <h3 className="box__title__text">Import</h3>
+            <div className="box__title__toolbox"></div>
+          </div>
+          <div className="box__content">
+            <label htmlFor="importFile">Import file:</label>
+            <input id="importFile" type="file" onChange={handleChangeImport} />
           </div>
         </div>
       </div>
