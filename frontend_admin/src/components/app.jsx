@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './layout/header';
 import Menu from './layout/menu';
 import Sites from './pages/sites/sites';
+import BackupTool from './pages/backup/backupTool';
 import '../../assets/styles/main.scss';
 
 export function App() {
@@ -20,6 +21,7 @@ export function App() {
       <main className="main">
         <Routes>
           <Route path="/" element={<Sites />} />
+          <Route path="/backup" element={<BackupTool />} />
         </Routes>
       </main>
     </>

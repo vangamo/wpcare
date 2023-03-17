@@ -1,13 +1,13 @@
+import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 export default function Menu({ showMenu }) {
   return (
     <section className={'sidenav shadow-right ' + (!showMenu && 'hidden')}>
       <nav className="sidenav_menu">
         <div className="sidenav__menuheading">Overview</div>
-        <Link className="sidenav__menulink active" to="#" aria-current="page">
+        <Link className="sidenav__menulink active" to="/" aria-current="page">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="activity" size="24" />
           </span>
@@ -49,12 +49,12 @@ export default function Menu({ showMenu }) {
         </Link>
         <div className="sidenav__menuheading">Tests</div>
         <div className="sidenav__menuheading">Tools</div>
-        <a className="sidenav__menulink" href="/backup">
+        <Link className="sidenav__menulink" to="/backup">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="package" size="24" />
           </span>
           Import/Export
-        </a>
+        </Link>
       </nav>
       <dl className="sidenav_footer">
         <dt className="sidenav_footer--subtitle">Logged in as:</dt>
