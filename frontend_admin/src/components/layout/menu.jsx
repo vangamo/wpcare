@@ -1,25 +1,26 @@
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 export default function Menu({ showMenu }) {
   return (
     <section className={'sidenav shadow-right ' + (!showMenu && 'hidden')}>
       <nav className="sidenav_menu">
         <div className="sidenav__menuheading">Overview</div>
-        <a className="sidenav__menulink active" href="#" aria-current="page">
+        <Link className="sidenav__menulink active" to="#" aria-current="page">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="activity" size="24" />
           </span>
           Dashboard
-        </a>
-        <a className="sidenav__menulink">
+        </Link>
+        <Link className="sidenav__menulink">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="clock" size="24" />
           </span>
           Load times
-        </a>
+        </Link>
         <div className="sidenav__menuheading">Webs</div>
-        <a className="sidenav__menulink" href="/sites">
+        <Link className="sidenav__menulink" to="/sites">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="folder" size="24" />
           </span>
@@ -27,8 +28,8 @@ export default function Menu({ showMenu }) {
           <span className="sidenav__menulink--arrow">
             <FeatherIcon icon="chevron-right" size="24" />
           </span>
-        </a>
-        <a className="sidenav__menulink">
+        </Link>
+        <Link className="sidenav__menulink">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="layout" size="24" />
           </span>
@@ -36,8 +37,8 @@ export default function Menu({ showMenu }) {
           <span className="sidenav__menulink--arrow">
             <FeatherIcon icon="chevron-right" size="24" />
           </span>
-        </a>
-        <a className="sidenav__menulink" href="/clients/">
+        </Link>
+        <Link className="sidenav__menulink" to="/clients/">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="briefcase" size="24" />
           </span>
@@ -45,7 +46,7 @@ export default function Menu({ showMenu }) {
           <span className="sidenav__menulink--arrow">
             <FeatherIcon icon="chevron-right" size="24" />
           </span>
-        </a>
+        </Link>
         <div className="sidenav__menuheading">Tests</div>
         <div className="sidenav__menuheading">Tools</div>
         <a className="sidenav__menulink" href="/backup">
