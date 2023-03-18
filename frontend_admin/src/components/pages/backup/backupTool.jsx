@@ -2,6 +2,7 @@ import Page from '../../layout/page';
 
 const MIME_TYPE = 'application/json';
 
+// <https://stackoverflow.com/questions/45831191/generate-and-download-file-from-js>
 const downloadContent = (filename, content, mime = MIME_TYPE) => {
   const downloadElement = document.createElement('a');
   downloadElement.setAttribute('download', filename);
@@ -40,15 +41,29 @@ export default function backupTool() {
       });
   };
 
-  const fr = new FileReader();
-  fr.onload = () => {
-    const jsonData = JSON.parse(fr.result);
-    handleImport(jsonData);
+  const readFile = (fd) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const jsonData = JSON.parse(fr.result);
+      handleImport(jsonData);
+    };
+    fr.readAsText(fd);
   };
 
   const handleChangeImport = (ev) => {
     console.dir(ev);
-    fr.readAsText(ev.target.files[0]);
+    readFile(ev.target.files[0]);
+  };
+
+  const handleDropFile = (ev) => {
+    ev.preventDefault();
+    // <https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop#process_the_drop>
+    console.table(ev.dataTransfer.items);
+    console.table(ev.dataTransfer.files);
+    console.table(ev.dataTransfer.types);
+    console.dir(ev.dataTransfer.items[0]);
+
+    readFile(ev.dataTransfer.files[0]);
   };
 
   return (
@@ -69,8 +84,15 @@ export default function backupTool() {
             <div className="box__title__toolbox"></div>
           </div>
           <div className="box__content">
-            <label htmlFor="importFile">Import file:</label>
-            <input id="importFile" type="file" onChange={handleChangeImport} />
+            <input id="importFile" type="file" onChange={handleChangeImport} style={{ display: 'none' }} />
+            <label
+              htmlFor="importFile"
+              style={{ display: 'block', border: 'dotted 7px #888888', height: '4em' }}
+              onDragOver={(ev) => ev.preventDefault()}
+              onDrop={handleDropFile}
+            >
+              Load your file here
+            </label>
           </div>
         </div>
       </div>
