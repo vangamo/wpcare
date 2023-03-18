@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import Page from '../../layout/page';
 
 const MIME_TYPE = 'application/json';
@@ -50,8 +51,9 @@ export default function backupTool() {
           };
 
           const exportDataString = JSON.stringify(exportDataJson);
+          const filename = 'wpcare-backup-' + format(new Date(), 'yyyy.mm.dd-hh.mm') + '.json';
 
-          downloadContent('wpcare-backup.json', exportDataString, MIME_TYPE);
+          downloadContent(filename, exportDataString, MIME_TYPE);
         } else {
           console.error('Error', data);
         }
