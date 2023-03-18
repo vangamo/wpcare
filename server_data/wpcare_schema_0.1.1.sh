@@ -51,4 +51,14 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
   INSERT INTO sites (name, url, type) VALUES ('Python','https://www.python.org/','web');
   INSERT INTO sites (name, url, type) VALUES ('Preact','https://preactjs.com/','web');
   INSERT INTO sites (name, url, type) VALUES ('Wordpress news','https://wordpress.org/news/','wp');
+
+  CREATE TABLE config (
+    key VARCHAR(32) NOT NULL,
+    value VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_by INTEGER NOT NULL DEFAULT 1,
+    PRIMARY KEY (key)
+  );
+
+  INSERT INTO config (key, value, created_by) VALUES ('version', '0.1.1', 0);
 EOSQL

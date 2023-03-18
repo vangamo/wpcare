@@ -12,18 +12,28 @@ const downloadContent = (filename, content, mime = MIME_TYPE) => {
 };
 
 export default function backupTool() {
-  const handleImport = (data) => {
-    for (const eachSite of data) {
-      console.log('Creating', eachSite);
-      fetch('http://localhost:5000/api/site/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(eachSite),
-      })
-        .then((response) => {
-          return response.json();
+  const IMPORT_FUNCTIONS = {
+    '0.1.1': (data) => {
+      const { sites } = data;
+      for (const eachSite of sites) {
+        console.log('Creating', eachSite);
+        fetch('http://localhost:5000/api/site/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(eachSite),
         })
-        .then((data) => console.log(data));
+          .then((response) => response.json())
+          .then((data) => console.log(data));
+      }
+    },
+  };
+  const handleImport = (data) => {
+    const version = data.version;
+
+    if (!version || !IMPORT_FUNCTIONS[version]) {
+      // Version error.
+    } else {
+      IMPORT_FUNCTIONS[version](data);
     }
   };
 
@@ -32,9 +42,16 @@ export default function backupTool() {
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
-          const textData = JSON.stringify(data.results);
+          const sites = data.results;
 
-          downloadContent('wpcare-backup.json', textData, MIME_TYPE);
+          const exportDataJson = {
+            version: '0.1.1',
+            sites: sites,
+          };
+
+          const exportDataString = JSON.stringify(exportDataJson);
+
+          downloadContent('wpcare-backup.json', exportDataString, MIME_TYPE);
         } else {
           console.error('Error', data);
         }
