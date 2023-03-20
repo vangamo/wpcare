@@ -6,6 +6,7 @@ import Menu from './layout/menu';
 import Sites from './pages/sites/sites';
 import BackupTool from './pages/backup/backupTool';
 import '../../assets/styles/main.scss';
+import Plugins from './pages/ext/plugins/plugins';
 
 export function App() {
   const [isSidenavShown, setSidenavShown] = useState(false);
@@ -21,6 +22,7 @@ export function App() {
       <main className="main">
         <Routes>
           <Route path="/" element={<Sites />} />
+          <Route path="/plugins" element={<Plugins />} />
           <Route path="/backup" element={<BackupTool />} />
         </Routes>
       </main>

@@ -13,12 +13,14 @@ export default function Menu({ showMenu }) {
           </span>
           Dashboard
         </Link>
+        {/*
         <Link className="sidenav__menulink">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="clock" size="24" />
           </span>
           Load times
         </Link>
+        */}
         <div className="sidenav__menuheading">Webs</div>
         <Link className="sidenav__menulink" to="/sites">
           <span className="sidenav__menulink--icon">
@@ -29,6 +31,7 @@ export default function Menu({ showMenu }) {
             <FeatherIcon icon="chevron-right" size="24" />
           </span>
         </Link>
+        {/*
         <Link className="sidenav__menulink">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="layout" size="24" />
@@ -43,6 +46,17 @@ export default function Menu({ showMenu }) {
             <FeatherIcon icon="briefcase" size="24" />
           </span>
           Clients
+          <span className="sidenav__menulink--arrow">
+            <FeatherIcon icon="chevron-right" size="24" />
+          </span>
+        </Link>
+        */}
+        <div className="sidenav__menuheading">WP</div>
+        <Link className="sidenav__menulink" to="/plugins/">
+          <span className="sidenav__menulink--icon">
+            <FeatherIcon icon="slider" size="24" />
+          </span>
+          Plugins
           <span className="sidenav__menulink--arrow">
             <FeatherIcon icon="chevron-right" size="24" />
           </span>
