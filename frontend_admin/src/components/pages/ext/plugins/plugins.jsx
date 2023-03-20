@@ -40,8 +40,30 @@ export default function () {
   }, []);
 
   const handleClickCreateMultiple = () => {
-    const sitesInfo = proccessInput(multiplePluginsInput);
-    console.dir(sitesInfo);
+    fetch('http://localhost:5000/api/sites/', { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.info.success) {
+          const allSites = data.results;
+          const sitesInfo = proccessInput(multiplePluginsInput);
+
+          for (const site of sitesInfo) {
+            const siteInfo = allSites.find((s) => s.url === site.url);
+
+            if (siteInfo) {
+              const siteId = siteInfo.id;
+
+              for (const eachPluginOfSite of site.plugins.activePlugins) {
+                handleSavePlugin({ ...eachPluginOfSite, active: true, sitewp_id: siteId });
+              }
+            } else {
+              console.log('Site ' + site.url + ' not registered.');
+            }
+          }
+        } else {
+          console.error(data);
+        }
+      });
   };
 
   const handleSavePlugin = (data) => {
