@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import FeatherIcon from 'feather-icons-react';
 import Page from '../../../layout/page';
 import Table from '../../../table/table';
+import { proccessInput } from './pluginsImport';
 /*
 const SITES_COLUMNS = [
   { type: 'id', col: 'id' },
@@ -19,6 +20,8 @@ const PLUGINS_COLUMNS = [
 ];
 
 export default function () {
+  const [isShownMultiplePluginBox, setIsShownMultiplePluginBox] = useState(false);
+  const [multiplePluginsInput, setMultiplePluginsInput] = useState('');
   const [isShownEditRow, setShownEditRow] = useState(false);
   const [listStatus, setListStatus] = useState('pending');
   const [pluginsList, setPluginsList] = useState([]);
@@ -35,6 +38,11 @@ export default function () {
         }
       });
   }, []);
+
+  const handleClickCreateMultiple = () => {
+    const sitesInfo = proccessInput(multiplePluginsInput);
+    console.dir(sitesInfo);
+  };
 
   const handleSavePlugin = (data) => {
     setShownEditRow(false);
@@ -85,11 +93,27 @@ export default function () {
           <div className="box__title">
             <h3 className="box__title__text">Plugins</h3>
             <div className="box__title__toolbox">
-              <button onClick={() => setShownEditRow(!isShownEditRow)}>
+              <button onClick={() => setShownEditRow(!isShownEditRow)} title="Register a new plugin">
                 <FeatherIcon icon="file-plus" size="24" />
+              </button>
+              <button
+                onClick={() => setIsShownMultiplePluginBox(!isShownMultiplePluginBox)}
+                title="Import plugin list from script JSON"
+              >
+                <FeatherIcon icon="layers" size="24" />
               </button>
             </div>
           </div>
+          {!isShownMultiplePluginBox && (
+            <div className="box__content">
+              <textarea
+                onInput={({ target }) => setMultiplePluginsInput(target.value)}
+                value={multiplePluginsInput}
+              ></textarea>
+              <button onClick={handleClickCreateMultiple}>Save</button>
+              <button onClick={() => setIsShownMultiplePluginBox(!isShownMultiplePluginBox)}>Cancel</button>
+            </div>
+          )}
           <div className="box__content">
             {listStatus === 'pending' && <p>Retrieving data</p>}
             {listStatus !== 'pending' && listStatus !== 'ok' && (
