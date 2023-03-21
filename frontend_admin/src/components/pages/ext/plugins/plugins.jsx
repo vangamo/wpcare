@@ -25,6 +25,7 @@ export default function () {
   const [isShownEditRow, setShownEditRow] = useState(false);
   const [listStatus, setListStatus] = useState('pending');
   const [pluginsList, setPluginsList] = useState([]);
+  const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:5000/api/plugins/', { method: 'GET' })
@@ -110,6 +111,26 @@ export default function () {
       .then((data) => console.log(data));
   };
 
+  const handleShowDetailPlugin = (dataRow) => {
+    const lastPluginVersion = dataRow.version.split('-').pop();
+    const pluginsToShow = pluginsList.filter((p) => p.slug === dataRow.id);
+
+    return (
+      <p>
+        Sites:
+        <ul>
+          {pluginsToShow.map((plugin, idx) => {
+            return (
+              <li key={idx}>
+                {plugin.site_name} {lastPluginVersion !== plugin.version && '(v' + plugin.version + ')'}
+              </li>
+            );
+          })}
+        </ul>
+      </p>
+    );
+  };
+
   const groupPlugins = (pluginsList) => {
     const plugins = [];
 
@@ -167,7 +188,7 @@ export default function () {
               </button>
             </div>
           </div>
-          {!isShownMultiplePluginBox && (
+          {isShownMultiplePluginBox && (
             <div className="box__content">
               <textarea
                 onInput={({ target }) => setMultiplePluginsInput(target.value)}
@@ -189,7 +210,7 @@ export default function () {
                 onDelete={handleDeletePlugin}
                 data={pluginsToShow}
                 columns={PLUGINS_COLUMNS}
-                detailsElement={(data) => <p>Details of plugin {data.name}</p>}
+                detailsElement={handleShowDetailPlugin}
               ></Table>
             )}
           </div>
