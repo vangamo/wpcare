@@ -56,12 +56,17 @@ function proccessPlugin(url, pluginFile, lines) {
       } else {
         pluginAtts[attName] = attValue;
       }
-    } else {
-      //console.log('DISCARDP' + line);
     }
   }
-  console.log("It shouldn't exit from here in plugin parser");
-  return pluginAtts;
+
+  const pluginInfo = {};
+  for (const key in PLUGIN_DB_FIELDS) {
+    pluginInfo[key] = pluginAtts[PLUGIN_DB_FIELDS[key]] || null;
+  }
+  pluginInfo.slug = pluginAtts['Plugin Slug'];
+  pluginInfo.name = pluginInfo.name || pluginInfo.slug;
+
+  return { ...pluginInfo, data: pluginAtts };
 }
 
 function proccessActivePlugins(url, lines) {
@@ -72,19 +77,16 @@ function proccessActivePlugins(url, lines) {
       lines.unshift(line);
       //console.log('END ACTIV PLUGINS');
       //console.table(plugins);
-      console.log(url);
-      console.table(plugins);
+
       return plugins;
     } else if (line.startsWith('### ')) {
       //console.log('PROC PLUGIN');
       const pluginFile = line.replace('### ', '').trim();
       const pluginAtts = proccessPlugin(url, pluginFile, lines);
       plugins.push(pluginAtts);
-    } else {
-      //console.log('DISCARD' + line);
     }
   }
-  console.log("It shouldn't exit from here");
+
   return plugins;
 }
 
@@ -100,10 +102,9 @@ function proccessInctivePlugins(url, lines) {
     } else if (line.trim() !== '') {
       //console.log('PROC PLUGIN');
       plugins.push(line.trim());
-    } else {
-      //console.log('DISCARD' + line);
     }
   }
+
   return plugins;
 }
 
@@ -121,10 +122,9 @@ function proccessSite(url, lines) {
     } else if (line.startsWith('## Inactive plugins')) {
       //console.log('PROC INACTIV');
       siteInfo['inactivePlugins'] = proccessInctivePlugins(url, lines);
-    } else {
-      //console.log('DISCARD' + line);
     }
   }
+
   return siteInfo;
 }
 
@@ -137,9 +137,6 @@ export function proccessInput(snpippetOutput) {
     if (line.startsWith('# ')) {
       const siteInfo = proccessSite(line, lines);
       sites.push({ url: line.replace('# ', ''), plugins: siteInfo });
-      //console.dir(siteInfo);
-    } else {
-      //console.log('DISCARD' + line);
     }
   }
 
