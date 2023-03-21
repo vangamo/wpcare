@@ -46,18 +46,41 @@ export default function () {
       .then((data) => {
         if (data.info.success) {
           const allSites = data.results;
-          const sitesInfo = proccessInput(multiplePluginsInput);
+          const pluginsOfSitesInfo = proccessInput(multiplePluginsInput);
 
-          for (const site of sitesInfo) {
+          for (const site of pluginsOfSitesInfo) {
             const siteInfo = allSites.find((s) => s.url === site.url);
 
             if (siteInfo) {
               const siteId = siteInfo.id;
 
               for (const eachPluginOfSite of site.plugins.activePlugins) {
+                console.log(eachPluginOfSite, siteId);
                 eachPluginOfSite.slug =
                   eachPluginOfSite.slug.length < 64 ? eachPluginOfSite.slug : eachPluginOfSite.slug.substring(0, 63);
-                handleSavePlugin({ ...eachPluginOfSite, active: true, sitewp_id: siteId });
+
+                const pluginAlreadySaved = pluginsList.find(
+                  (p) => p.slug === eachPluginOfSite.slug && p.site_url === siteInfo.url
+                );
+                console.log(pluginAlreadySaved);
+                if (pluginAlreadySaved) {
+                  // Upsert plugin
+                  handleUpdatePlugin(
+                    {
+                      ...eachPluginOfSite,
+                      active: true,
+                      sitewp_id: siteId,
+                    },
+                    { ...pluginAlreadySaved, sitewp_id: siteId }
+                  );
+                } else {
+                  // Insert plugin
+                  handleSavePlugin({
+                    ...eachPluginOfSite,
+                    active: true,
+                    sitewp_id: siteId,
+                  });
+                }
               }
             } else {
               console.log('Site ' + site.url + ' not registered.');
