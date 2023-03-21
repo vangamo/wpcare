@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2.extras import DictCursor
 import os
 
 print(os.environ)
@@ -30,6 +31,7 @@ def get_connection():
     password=os.environ.get('PGSQL_WPCARE_PASSWORD',''),
     host=os.environ.get('PGSQL_WPCARE_HOST','server_data'),
     port=os.environ.get('PGSQL_WPCARE_PORT','5432'),
+    cursor_factory=psycopg2.extras.DictCursor
   )
 
 def check_database():
