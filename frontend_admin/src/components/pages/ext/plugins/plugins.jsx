@@ -54,6 +54,8 @@ export default function () {
               const siteId = siteInfo.id;
 
               for (const eachPluginOfSite of site.plugins.activePlugins) {
+                eachPluginOfSite.slug =
+                  eachPluginOfSite.slug.length < 64 ? eachPluginOfSite.slug : eachPluginOfSite.slug.substring(0, 63);
                 handleSavePlugin({ ...eachPluginOfSite, active: true, sitewp_id: siteId });
               }
             } else {
