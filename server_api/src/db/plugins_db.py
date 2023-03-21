@@ -159,7 +159,10 @@ class WPPlugins_DB(DB):
     for field in ['sitewp_id', 'slug', 'name', 'active', 'version', 'author', 'author_uri', 'plugin_uri', 'wp_req_version', 'wp_min_version', 'wp_tested_version', 'php_req_version', 'data']:
       if field in data:
         fields_chunk += SEPARATOR+field+'=%s'
-        values.append(data[field])
+        if 'data' == field:
+          values.append(json.dumps(data[field]))
+        else:
+          values.append(data[field])
         SEPARATOR = ', '
 
     values.append(id)
