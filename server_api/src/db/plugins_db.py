@@ -151,46 +151,74 @@ class WPPlugins_DB(DB):
     conn = self.get_conection()
     if not conn:
       raise DatabaseConnException("Cannot connect to database.")
-    
+
+
+    cursor = conn.cursor()
+    cursor.execute(
+      '''
+        INSERT INTO wp_plugins_updated
+                (id, sitewp_id, slug, name, active, version, author, author_uri, plugin_uri, wp_req_version, wp_min_version, wp_tested_version, php_req_version, data)
+          SELECT id, sitewp_id, slug, name, active, version, author, author_uri, plugin_uri, wp_req_version, wp_min_version, wp_tested_version, php_req_version, data
+            FROM wp_plugins
+            WHERE id=%s
+            LIMIT 1
+          RETURNING id, sitewp_id, slug, name, active, version, author, author_uri, plugin_uri, wp_req_version, wp_min_version, wp_tested_version, php_req_version, data;
+      ''', (id,))
+
+    #if cursor.rowcount == 0 or row[0] == 0:
+    #  raise DatabaseDataException("Plugin not updated (" + cursor.statusmessage + ")")
+    old_row = cursor.fetchone()
+    print( old_row['id'] )
+
     fields_chunk = ''
     values = []
     SEPARATOR = ''
 
     for field in ['sitewp_id', 'slug', 'name', 'active', 'version', 'author', 'author_uri', 'plugin_uri', 'wp_req_version', 'wp_min_version', 'wp_tested_version', 'php_req_version', 'data']:
       if field in data:
-        fields_chunk += SEPARATOR+field+'=%s'
-        if 'data' == field:
-          values.append(json.dumps(data[field]))
-        else:
-          values.append(data[field])
-        SEPARATOR = ', '
+        if old_row is None or (field in old_row and old_row[field] != data[field]):
+          fields_chunk += SEPARATOR+field+'=%s'
+          if 'data' == field:
+            values.append(json.dumps(data[field]))
+          else:
+            values.append(data[field])
+          SEPARATOR = ', '
 
-    values.append(id)
+    print("Values:")
+    print(values)
 
-    cursor = conn.cursor()
-    cursor.execute(
-      '''
-        UPDATE wp_plugins
-        SET ''' + fields_chunk + '''
-        WHERE id=%s
-        RETURNING id
-      ''', (values))
+    if len(values) > 0:
+      values.append(id)
 
-    print(cursor.statusmessage)
-    print(cursor.rowcount)
-    print(cursor.lastrowid)
-    print(cursor.query)
-    print(cursor.rownumber)
-    print(cursor.tzinfo_factory)
-    row = cursor.fetchone()
-    print(row)
+      cursor = conn.cursor()
+      cursor.execute(
+        '''
+          UPDATE wp_plugins
+          SET ''' + fields_chunk + '''
+          WHERE id=%s
+          RETURNING id
+        ''', (values))
 
-    result = {'count': cursor.rowcount, 'id': row[0]}
-    
-    cursor.close()
-    conn.commit()
+      print(cursor.statusmessage)
+      print(cursor.rowcount)
+      print(cursor.lastrowid)
+      print(cursor.query)
+      print(cursor.rownumber)
+      print(cursor.tzinfo_factory)
+      row = cursor.fetchone()
+      print(row)
 
-    return result
+      result = {'count': cursor.rowcount, 'id': row[0]}
+      
+      cursor.close()
+      conn.commit()
+
+      return result
+    else:
+      cursor.close()
+      conn.rollback()
+
+      raise DatabaseDataException("Nothing to update")
 
 
 
