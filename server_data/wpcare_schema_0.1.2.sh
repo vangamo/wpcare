@@ -10,7 +10,7 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     PRIMARY KEY (id)
   );
   CREATE TABLE sites_updated (
-    id SERIAL NOT NULL,
+    id INTEGER NOT NULL,
     name TEXT NOT NULL,
     url VARCHAR(255) NOT NULL,
     type VARCHAR(32) NOT NULL UNIQUE,
@@ -19,7 +19,7 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     --FOREIGN KEY (id) REFERENCES sites (id) ON UPDATE CASCADE ON DELETE NO ACTION
   );
   CREATE TABLE sites_deleted (
-    id SERIAL NOT NULL,
+    id INTEGER NOT NULL,
     name TEXT NOT NULL,
     url VARCHAR(255) NOT NULL,
     type VARCHAR(32) NOT NULL UNIQUE,
@@ -63,10 +63,10 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     wp_version varchar(16),
     php_version varchar(16),
     admin_email varchar(64),
-    --FOREIGN KEY (id) REFERENCES siteswp (id) ON UPDATE CASCADE ON DELETE NO ACTION
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_by INTEGER NOT NULL DEFAULT 1,
-    CONSTRAINT siteswp_updated_pkey PRIMARY KEY (id),
+    --CONSTRAINT siteswp_updated_pkey PRIMARY KEY (id),
+    --FOREIGN KEY (id) REFERENCES siteswp (id) ON UPDATE CASCADE ON DELETE NO ACTION
     CONSTRAINT siteswp_updated_id_fkey FOREIGN KEY (id)
         REFERENCES sites (id) MATCH SIMPLE
         ON UPDATE CASCADE
@@ -79,10 +79,10 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     wp_version varchar(16),
     php_version varchar(16),
     admin_email varchar(64),
-    --FOREIGN KEY (id) REFERENCES siteswp (id) ON UPDATE CASCADE ON DELETE NO ACTION
     deleted_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_by INTEGER NOT NULL DEFAULT 1,
-    CONSTRAINT siteswp_deleted_pkey PRIMARY KEY (id),
+    --CONSTRAINT siteswp_deleted_pkey PRIMARY KEY (id),
+    --FOREIGN KEY (id) REFERENCES siteswp (id) ON UPDATE CASCADE ON DELETE NO ACTION
     CONSTRAINT siteswp_deleted_id_fkey FOREIGN KEY (id)
         REFERENCES sites (id) MATCH SIMPLE
         ON UPDATE CASCADE
@@ -116,7 +116,7 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
   );
   CREATE TABLE IF NOT EXISTS wp_plugins_updated
   (
-    id SERIAL NOT NULL,
+    id INTEGER NOT NULL,
     sitewp_id integer NOT NULL,
     slug varchar(64) NOT NULL,
     name varchar(255) NOT NULL,
@@ -130,10 +130,10 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     wp_tested_version varchar(16),
     php_req_version varchar(16),
     data json NOT NULL DEFAULT '{}',
-    --FOREIGN KEY (id) REFERENCES wp_plugins (id) ON UPDATE CASCADE ON DELETE NO ACTION
     updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_by INTEGER NOT NULL DEFAULT 1,
-    CONSTRAINT wp_plugins_updated_pkey PRIMARY KEY (id),
+    --CONSTRAINT wp_plugins_updated_pkey PRIMARY KEY (id),
+    --FOREIGN KEY (id) REFERENCES wp_plugins (id) ON UPDATE CASCADE ON DELETE NO ACTION
     CONSTRAINT wp_plugins_updated_id_fkey FOREIGN KEY (sitewp_id)
         REFERENCES siteswp (id) MATCH SIMPLE
         ON UPDATE CASCADE
@@ -141,7 +141,7 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
   );
   CREATE TABLE IF NOT EXISTS wp_plugins_deleted
   (
-    id SERIAL NOT NULL,
+    id INTEGER NOT NULL,
     sitewp_id integer NOT NULL,
     slug varchar(64) NOT NULL,
     name varchar(255) NOT NULL,
@@ -155,16 +155,15 @@ psql -v ON_ERROR_STOP=1 --username "${PGSQL_WPCARE_USER}" --dbname "${PGSQL_WPCA
     wp_tested_version varchar(16),
     php_req_version varchar(16),
     data json NOT NULL DEFAULT '{}',
-    --FOREIGN KEY (id) REFERENCES wp_plugins (id) ON UPDATE CASCADE ON DELETE NO ACTION
     deleted_at TIMESTAMP NOT NULL DEFAULT NOW(),
     deleted_by INTEGER NOT NULL DEFAULT 1,
-    CONSTRAINT wp_plugins_deleted_pkey PRIMARY KEY (id),
+    --CONSTRAINT wp_plugins_deleted_pkey PRIMARY KEY (id),
+    --FOREIGN KEY (id) REFERENCES wp_plugins (id) ON UPDATE CASCADE ON DELETE NO ACTION
     CONSTRAINT wp_plugins_deleted_id_fkey FOREIGN KEY (sitewp_id)
         REFERENCES siteswp (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
   );
-  INSERT INTO wp_plugins (sitewp_id, slug, name, active, version, author, author_uri, plugin_uri, wp_req_version, wp_min_version, wp_tested_version, php_req_version, data) VALUES (3, 'worker', 'ManageWP - Worker', true, '4.9.16', 'GoDaddy', 'https://godaddy.com', 'https://managewp.com', null, null, null, null, '{"Plugin Starter":"worker/init.php","Plugin Slug":"worker","Plugin Name":"ManageWP - Worker","Plugin URI":"https://managewp.com","Description":"We help you efficiently manage all your WordPress websites. <strong>Updates, backups, 1-click login, migrations, security</strong> and more, on one dashboard. This service comes in two versions:standalone <a href=\"https://managewp.com\">ManageWP</a> service that focuses on website management, and <a href=\"https://godaddy.com/pro\">GoDaddy Pro</a> that includes additional tools for hosting, client management, lead generation, and more.","Version":"4.9.16","Author":"GoDaddy","Author URI":"https://godaddy.com","License":"GPL2","Text Domain":"worker","Network":"true"}');
 
   --SELECT name, data->'Plugin URI' FROM wp_plugins;
 EOSQL
