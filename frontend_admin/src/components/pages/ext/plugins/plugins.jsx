@@ -110,6 +110,45 @@ export default function () {
       .then((data) => console.log(data));
   };
 
+  const groupPlugins = (pluginsList) => {
+    const plugins = [];
+
+    for (const plugin of pluginsList) {
+      const idx = plugins.findIndex((p) => p.id === plugin.slug);
+
+      if (idx === -1) {
+        plugins.push({
+          id: plugin.slug,
+          name: plugin.name,
+          version: plugin.version || '[N/D]',
+          author: plugin.author,
+          //sites: [{ id: plugin.sitewp_id }],
+          sites: 1,
+        });
+      } else {
+        let tableVersions = plugins[idx].version.split('-');
+        tableVersions.push(plugin.version || '[N/D]');
+        tableVersions = [...new Set(tableVersions)];
+        if (tableVersions.length === 1) {
+          plugins[idx].version = tableVersions[0];
+        } else {
+          tableVersions.sort();
+          plugins[idx].version = tableVersions[0] + '-' + tableVersions[tableVersions.length - 1];
+        }
+
+        //if (plugins[idx].version !== plugin.version) {
+        //  plugins[idx].version += '-' + plugin.version;
+        //}
+        //plugins[idx].sites.push({ id: plugin.sitewp_id });
+        plugins[idx].sites++;
+      }
+    }
+
+    return plugins;
+  };
+
+  const pluginsToShow = groupPlugins(pluginsList);
+
   return (
     <Page name="Plugins" title="Plugins" description="Listing all plugins">
       <div className="row-1">
@@ -148,7 +187,7 @@ export default function () {
                 onCreate={isShownEditRow && handleSavePlugin}
                 onUpdate={handleUpdatePlugin}
                 onDelete={handleDeletePlugin}
-                data={pluginsList}
+                data={pluginsToShow}
                 columns={PLUGINS_COLUMNS}
                 detailsElement={(data) => <p>Details of plugin {data.name}</p>}
               ></Table>
