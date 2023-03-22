@@ -4,7 +4,7 @@ services:
   server_proxy:
     build:
       context: server_proxy/.
-      dockerfile: ../WPCareServerProxy.Dockerfile
+      dockerfile: WPCareServerProxy.Dockerfile
     restart: always
     environment:
       - FLASK_SERVER_ADDR=server_api:8000
@@ -22,7 +22,7 @@ services:
   server_api:
     build:
       context: server_api/.
-      dockerfile: ../WPCareServerApi.Dockerfile
+      dockerfile: WPCareServerApi.Dockerfile
     restart: always
     environment:
       PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
@@ -37,16 +37,17 @@ services:
       interval: 300s
       timeout: 10s
       retries: 3
-    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 app:app
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 src.app:app
 
   server_data:
     build:
       context: server_data/.
-      dockerfile: ../WPCareServerData.Dockerfile
+      dockerfile: WPCareServerData.Dockerfile
       args:
         PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
         PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
         PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
+        TAG: ${TAG}
     restart: always
     environment:
       POSTGRES_PASSWORD: ${PGSQL_ROOT_PASSWORD}
@@ -54,8 +55,8 @@ services:
     ports:
       - 5432:5432
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "${PGSQL_WPCARE_DB}"]
+      test: ['CMD-SHELL', 'pg_isready', '-d', '${PGSQL_WPCARE_DB}']
       interval: 150s
       timeout: 60s
       retries: 5
-      start_period: 80s 
+      start_period: 80s
