@@ -8,7 +8,7 @@ const downloadContent = (filename, content, mime = MIME_TYPE) => {
   const downloadElement = document.createElement('a');
   downloadElement.setAttribute('download', filename);
   downloadElement.setAttribute('type', mime);
-  downloadElement.setAttribute('href', 'data:' + mime + ',' + content);
+  downloadElement.setAttribute('href', 'data:' + mime + ',' + encodeURIComponent(content));
   downloadElement.click();
 };
 
@@ -51,7 +51,7 @@ export default function backupTool() {
           };
 
           const exportDataString = JSON.stringify(exportDataJson);
-          const filename = 'wpcare-backup-' + format(new Date(), 'yyyy.mm.dd-hh.mm') + '.json';
+          const filename = 'wpcare-backup-' + format(new Date(), 'yyyy.MM.dd-HH.mm') + '.json';
 
           downloadContent(filename, exportDataString, MIME_TYPE);
         } else {
