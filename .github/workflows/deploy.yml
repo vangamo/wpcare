@@ -23,14 +23,19 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
+          
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
 
       - name: Install dependencies
-        uses: pnpm/action-setup@v2
-        with:
-          run_install.cwd: './frontend_admin'
+        run: cd './frontend_admin' && pnpm install
 
       - name: Build project
-        run: cd './frontend_admin' && npm run build
+        run: cd './frontend_admin' && pnpm run build
         
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v2
