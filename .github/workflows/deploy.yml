@@ -1,0 +1,62 @@
+# vite: <https://github.com/sitek94/vite-deploy-demo>
+# zip: <https://github.com/marketplace/actions/zip-release>
+# release-action: <https://github.com/ncipollo/release-action>
+# pnpm: <https://github.com/pnpm/action-setup>
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - dev
+    tags:
+    - '*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Install dependencies
+        run: cd './frontend_admin' && pnpm install
+
+      - name: Build project
+        run: cd './frontend_admin' && pnpm run build
+        
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./dist
+
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: 'wpcare-frontend-release.zip'
+          directory: './frontend_admin/dist'
+          exclusions: '*.git* /*node_modules/* .editorconfig'
+        
+      - name: Upload Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: 'wpcare-frontend-release.zip'
