@@ -18,7 +18,7 @@ export default function backupTool() {
       const { sites } = data;
       for (const eachSite of sites) {
         console.log('Creating', eachSite);
-        fetch('http://localhost:5000/api/site/', {
+        fetch('/api/site/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eachSite),
@@ -39,7 +39,7 @@ export default function backupTool() {
   };
 
   const handleClickExport = () => {
-    fetch('http://localhost:5000/api/sites/', { method: 'GET' })
+    fetch('/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {

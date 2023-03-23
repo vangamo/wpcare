@@ -28,7 +28,7 @@ export default function () {
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/plugins/', { method: 'GET' })
+    fetch('/api/plugins/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -41,7 +41,7 @@ export default function () {
   }, []);
 
   const handleClickCreateMultiple = () => {
-    fetch('http://localhost:5000/api/sites/', { method: 'GET' })
+    fetch('/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -96,7 +96,7 @@ export default function () {
     setShownEditRow(false);
     console.log('Create', data);
 
-    fetch('http://localhost:5000/api/plugin/', {
+    fetch('/api/plugin/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -111,7 +111,7 @@ export default function () {
   const handleUpdatePlugin = (newData, oldData) => {
     console.log('Edit', { newData, oldData });
 
-    fetch('http://localhost:5000/api/plugin/' + oldData.id, {
+    fetch('/api/plugin/' + oldData.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newData),
@@ -126,7 +126,7 @@ export default function () {
   const handleDeletePlugin = (id) => {
     console.log('Delete', id);
 
-    fetch('http://localhost:5000/api/plugin/' + id, { method: 'DELETE' })
+    fetch('/api/plugin/' + id, { method: 'DELETE' })
       .then((response) => {
         console.dir(response);
         return response.json();

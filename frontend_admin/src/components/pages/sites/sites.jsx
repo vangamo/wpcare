@@ -17,7 +17,7 @@ export default function () {
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/sites/', { method: 'GET' })
+    fetch('/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -33,7 +33,7 @@ export default function () {
     setShownEditRow(false);
     console.log('Create', data);
 
-    fetch('http://localhost:5000/api/site/', {
+    fetch('/api/site/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -48,7 +48,7 @@ export default function () {
   const handleUpdateSite = (newData, oldData) => {
     console.log('Edit', { newData, oldData });
 
-    fetch('http://localhost:5000/api/site/' + oldData.id, {
+    fetch('/api/site/' + oldData.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newData),
@@ -63,7 +63,7 @@ export default function () {
   const handleDeleteSite = (id) => {
     console.log('Delete', id);
 
-    fetch('http://localhost:5000/api/site/' + id, { method: 'DELETE' })
+    fetch('/api/site/' + id, { method: 'DELETE' })
       .then((response) => {
         console.dir(response);
         return response.json();
