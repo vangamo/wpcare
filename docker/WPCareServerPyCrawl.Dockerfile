@@ -17,7 +17,8 @@ WORKDIR /home/app
 
 # Download and deploy server py.
 # tar -czf server_py_v0.1.0.tar.gz --exclude='__pycache__' requirements.txt src
-ADD https://github.com/vangamo/wpcare/releases/download/v0.1.0/server_py_v0.1.0.tar.gz server_py.tar.gz
+ARG TAG
+ADD https://github.com/vangamo/wpcare/releases/download/v${TAG}/server_py_v${TAG}.tar.gz server_py.tar.gz
 RUN tar -xzf server_py.tar.gz
 RUN rm server_py.tar.gz
 RUN chown nonroot:nonroot requirements.txt && chmod -R 444 requirements.txt && \
