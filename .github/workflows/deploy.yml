@@ -1,0 +1,45 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: './frontend_admin'
+
+      - name: Build project
+        run: cd './frontend_admin' && npm run build
+        
+      - name: Upload production-ready build files
+        uses: actions/upload-artifact@v2
+        with:
+          name: production-files
+          path: ./dist
+
+      - uses: actions/checkout@master
+      - name: Archive Release
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: 'wpcare-frontend-release.zip'
+          directory: './frontend_admin/dist'
+          
+          exclusions: '*.git* /*node_modules/* .editorconfig'
+        
