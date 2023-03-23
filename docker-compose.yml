@@ -8,6 +8,7 @@ services:
     restart: always
     environment:
       - FLASK_SERVER_ADDR=server_api:8000
+      - PYCRAWL_SERVER_ADDR=server_pycrawl:8005
     ports:
       - '80:80'
     depends_on:
@@ -60,3 +61,23 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s
+
+  server_pycrawl:
+    build:
+      context: server_pycrawl/.
+      dockerfile: WPCareServerPyCrawl.Dockerfile
+    restart: always
+    environment:
+      PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+      PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+      PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
+    ports:
+      - '8005:8005'
+    depends_on:
+      - server_data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:8005/pycrawl-health-check || exit 1']
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8005 src.app:app
