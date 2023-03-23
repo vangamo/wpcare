@@ -14,10 +14,16 @@ RUN mkdir /home/app/ && chown -R nonroot:nonroot /home/app
 RUN mkdir -p /var/log/flask-app && touch /var/log/flask-app/flask-app.err.log && touch /var/log/flask-app/flask-app.out.log
 RUN chown -R nonroot:nonroot /var/log/flask-app
 WORKDIR /home/app
-USER nonroot
 
-# copy all the files to the container
-COPY --chown=nonroot:nonroot . .
+# Download and deploy server py.
+# tar -czf server_py_v0.1.0.tar.gz --exclude='__pycache__' requirements.txt src
+ADD https://github.com/vangamo/wpcare/releases/download/v0.1.0/server_py_v0.1.0.tar.gz server_py.tar.gz
+RUN tar -xzf server_py.tar.gz
+RUN rm server_py.tar.gz
+RUN chown nonroot:nonroot requirements.txt && chmod -R 444 requirements.txt && \
+    chown -R nonroot:nonroot src && chmod -R 755 src
+
+USER nonroot
 
 # venv
 ENV VIRTUAL_ENV=/home/app/venv
