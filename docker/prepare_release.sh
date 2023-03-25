@@ -30,3 +30,12 @@ cd -
 cd ../server_pycrawl
 tar -czf ../docker/dist/server_py_v${TAG}.tar.gz --exclude='__pycache__' requirements.txt src
 cd -
+
+
+if ! type gh > /dev/null ; then
+  echo "GitHub CLI not installed"
+else
+  echo "Github CLI installed"
+  echo "Creating tag"
+  echo "Creating release"
+fi
