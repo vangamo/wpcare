@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: production-files
-          path: ./dist
+          path: './frontend_admin/dist'
 
       - name: Archive Release
         uses: thedoctor0/zip-release@0.7.1
@@ -59,4 +59,4 @@ jobs:
       - name: Upload Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          artifacts: 'wpcare-frontend-release.zip'
+          artifacts: './frontend_admin/dist/wpcare-frontend-release.zip'
