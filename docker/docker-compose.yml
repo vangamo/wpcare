@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  server_proxy:
+    image: wpcare_server_proxy:${TAG:-0.1.2}
+    build:
+      context: .
+      dockerfile: WPCareServerProxy.Dockerfile
+      args:
+        TAG: "${TAG:-0.1.2}"
+    restart: always
+    environment:
+      - FLASK_SERVER_ADDR=server_api:8000
+      - PYCRAWL_SERVER_ADDR=server_pycrawl:8005
+    ports:
+      - $WPCARE_PORT:80
+    depends_on:
+      - server_api
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:80/health-check || exit 1']
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    command: /app/start.sh
+
+  server_api:
+    image: wpcare_server_api:${TAG:-0.1.2}
+    build:
+      context: .
+      dockerfile: WPCareServerApi.Dockerfile
+      args:
+        TAG: "${TAG:-0.1.2}"
+    restart: always
+    environment:
+      TAG: "${TAG:-0.1.2}"
+      PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+      PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+      PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
+    depends_on:
+      - server_data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:8000/flask-health-check || exit 1']
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 src.app:app
+
+  server_data:
+    image: wpcare_server_data:${TAG:-0.1.2}
+    build:
+      context: .
+      dockerfile: WPCareServerData.Dockerfile
+      args:
+        TAG: "${TAG:-0.1.2}"
+        PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+        PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+        PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${PGSQL_ROOT_PASSWORD}
+      POSTGRES_USER: ${PGSQL_ROOT_USER}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready', '-d', '${PGSQL_WPCARE_DB}']
+      interval: 150s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  server_pycrawl:
+    image: wpcare_server_py:${TAG:-0.1.2}
+    build:
+      context: .
+      dockerfile: WPCareServerPyCrawl.Dockerfile
+      args:
+        TAG: "${TAG:-0.1.2}"
+    restart: always
+    environment:
+      TAG: "${TAG:-0.1.2}"
+      PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
+      PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
+      PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
+    depends_on:
+      - server_data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --silent --fail localhost:8005/pycrawl-health-check || exit 1']
+      interval: 300s
+      timeout: 10s
+      retries: 3
+    command: gunicorn -w 3 -t 60 -b 0.0.0.0:8005 src.app:app
