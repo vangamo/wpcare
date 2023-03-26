@@ -91,7 +91,7 @@ export default function TableRowList({ data, columns, detailsElement, onUpdate, 
         )}
       </tr>
       <tr key={'row-detail-' + idx} className={'table__details ' + (!openRows.includes(idx) && 'collapsed')}>
-        <td colspan={1 + columns.length}>{callDetailsRenderer(row, idx)}</td>
+        <td colspan={1 + columns.length}>{openRows.includes(idx) && callDetailsRenderer(row, idx)}</td>
       </tr>
     </>
   ));

@@ -65,36 +65,55 @@ class Sites_DB(DB):
       raise DatabaseConnException("Cannot connect to database.")
     
     cursor = conn.cursor()
-    cursor.execute(
-      '''
-        INSERT
-          INTO sites (name, url, type)
-          VALUES (%s, %s, %s)
-          RETURNING id, name, url, type, created_at
-      ''', (data['name'], data['url'], data['type']))
+    try:
+      cursor.execute(
+        '''
+          INSERT
+            INTO sites (name, url, type)
+            VALUES (%s, %s, %s)
+            RETURNING id, name, url, type, created_at
+        ''', (data['name'], data['url'], data['type']))
 
-    print(cursor.statusmessage)
-    print(cursor.rowcount)
-    print(cursor.lastrowid)
-    print(cursor.query)
-    print(cursor.rownumber)
-    print(cursor.tzinfo_factory)
-    row = cursor.fetchone()
-    print(row)
+      print(cursor.statusmessage)
+      print(cursor.rowcount)
+      print(cursor.lastrowid)
+      print(cursor.query)
+      print(cursor.rownumber)
+      print(cursor.tzinfo_factory)
+      row = cursor.fetchone()
+      print(row)
 
-    if cursor.rowcount == 0 or row[0] == 0:
-      raise DatabaseDataException("Site not created (" + cursor.statusmessage + ")")
+      if cursor.rowcount == 0 or row[0] == 0:
+        raise DatabaseDataException("Site not created (" + cursor.statusmessage + ")")
 
-    site = {
-      "id": row[0],
-      "name": row[1],
-      "url": row[2],
-      "type": row[3],
-      "lastAccess": ( None if row[4] is None else row[4].isoformat() ),
-    }
+      site = {
+        "id": row[0],
+        "name": row[1],
+        "url": row[2],
+        "type": row[3],
+        "lastAccess": ( None if row[4] is None else row[4].isoformat() ),
+      }
 
-    cursor.close()
-    return site
+      if data['type'] == 'wp':
+        cursor.execute(
+          '''
+            INSERT
+              INTO siteswp (id, title)
+              VALUES (%s, %s)
+              RETURNING id, title
+          ''', (site['id'], data['name']))
+
+        if cursor.rowcount == 0 or row[0] == 0:
+          raise DatabaseDataException("SiteWP not created (" + cursor.statusmessage + ")")
+
+      cursor.close()
+      conn.commit()
+
+      return site
+    except Exception as ex:
+      print('Closing connection')
+      cursor.close()
+      raise ex
 
 
   def replace(self, id, data):
@@ -135,6 +154,8 @@ class Sites_DB(DB):
     result = {'count': cursor.rowcount, 'id': row[0]}
     
     cursor.close()
+    conn.commit()
+
     return result
 
 
@@ -168,4 +189,6 @@ class Sites_DB(DB):
     result = {'count': cursor.rowcount, 'id': row[0]}
     
     cursor.close()
+    conn.commit()
+
     return result

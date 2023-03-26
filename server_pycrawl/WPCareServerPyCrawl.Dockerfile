@@ -3,7 +3,7 @@ FROM python:3.9.2-alpine
 # Based on <https://github.com/docker/awesome-compose/tree/master/nginx-wsgi-flask>
 
 # Install libpq-dev 
-RUN apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk add postgresql-dev gcc python3-dev musl-dev curl-dev
 
 # upgrade pip
 RUN pip install --upgrade pip
@@ -29,6 +29,6 @@ RUN export FLASK_APP=src/app.py
 RUN pip install -r requirements.txt
 
 # define the port number the container should expose
-EXPOSE 5000
+EXPOSE 5005
 
 CMD ["python", "src/app.py"]
