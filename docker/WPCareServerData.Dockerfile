@@ -12,7 +12,7 @@ ARG PGSQL_WPCARE_PASSWORD='wpcare'
 ARG TAG
 
 # Download table schema
-# tar -czf server_data_v0.1.0.tar.gz init.sql *.sh
+# tar -czf server_data_v0.1.2.tar.gz init.sql *.sh
 ADD https://github.com/vangamo/wpcare/releases/download/v${TAG}/server_data_v${TAG}.tar.gz ./server_data.tar.gz
 RUN tar -xzf ./server_data.tar.gz
 RUN rm ./server_data.tar.gz

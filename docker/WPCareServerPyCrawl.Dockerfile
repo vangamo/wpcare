@@ -16,7 +16,7 @@ RUN chown -R nonroot:nonroot /var/log/flask-app
 WORKDIR /home/app
 
 # Download and deploy server py.
-# tar -czf server_py_v0.1.0.tar.gz --exclude='__pycache__' requirements.txt src
+# tar -czf server_py_v0.1.2.tar.gz --exclude='__pycache__' requirements.txt src
 ARG TAG
 ADD https://github.com/vangamo/wpcare/releases/download/v${TAG}/server_py_v${TAG}.tar.gz server_py.tar.gz
 RUN tar -xzf server_py.tar.gz

@@ -12,7 +12,7 @@ RUN chown nginx:nginx /etc/nginx/nginx.conf
 RUN chown nginx:nginx /app/start.sh
 
 # Download and deploy frontend for admin backend.
-# tar -czvf v0.1.0.tar.gz -C dist .
+# tar -czvf v0.1.2.tar.gz -C dist .
 ARG TAG
 ADD https://github.com/vangamo/wpcare/releases/download/v${TAG}/frontend_admin_v${TAG}.tar.gz /app/static/frontend.tar.gz
 RUN tar -xzf /app/static/frontend.tar.gz -C /app/static

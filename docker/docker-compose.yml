@@ -2,12 +2,12 @@ version: '3'
 
 services:
   server_proxy:
-    image: wpcare_server_proxy:${TAG:-0.1.0}
+    image: wpcare_server_proxy:${TAG:-0.1.2}
     build:
       context: .
       dockerfile: WPCareServerProxy.Dockerfile
       args:
-        TAG: "${TAG:-0.1.0}"
+        TAG: "${TAG:-0.1.2}"
     restart: always
     environment:
       - FLASK_SERVER_ADDR=server_api:8000
@@ -24,15 +24,15 @@ services:
     command: /app/start.sh
 
   server_api:
-    image: wpcare_server_api:${TAG:-0.1.0}
+    image: wpcare_server_api:${TAG:-0.1.2}
     build:
       context: .
       dockerfile: WPCareServerApi.Dockerfile
       args:
-        TAG: "${TAG:-0.1.0}"
+        TAG: "${TAG:-0.1.2}"
     restart: always
     environment:
-      TAG: "${TAG:-0.1.0}"
+      TAG: "${TAG:-0.1.2}"
       PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
       PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
       PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
@@ -46,12 +46,12 @@ services:
     command: gunicorn -w 3 -t 60 -b 0.0.0.0:8000 src.app:app
 
   server_data:
-    image: wpcare_server_data:${TAG:-0.1.0}
+    image: wpcare_server_data:${TAG:-0.1.2}
     build:
       context: .
       dockerfile: WPCareServerData.Dockerfile
       args:
-        TAG: "${TAG:-0.1.0}"
+        TAG: "${TAG:-0.1.2}"
         PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
         PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
         PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
@@ -67,15 +67,15 @@ services:
       start_period: 80s
 
   server_pycrawl:
-    image: wpcare_server_py:${TAG:-0.1.0}
+    image: wpcare_server_py:${TAG:-0.1.2}
     build:
       context: .
       dockerfile: WPCareServerPyCrawl.Dockerfile
       args:
-        TAG: "${TAG:-0.1.0}"
+        TAG: "${TAG:-0.1.2}"
     restart: always
     environment:
-      TAG: "${TAG:-0.1.0}"
+      TAG: "${TAG:-0.1.2}"
       PGSQL_WPCARE_DB: ${PGSQL_WPCARE_DB}
       PGSQL_WPCARE_USER: ${PGSQL_WPCARE_USER}
       PGSQL_WPCARE_PASSWORD: ${PGSQL_WPCARE_PASSWORD}
