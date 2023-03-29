@@ -2,12 +2,12 @@ import { NavLink } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react/build/FeatherIcon';
 import PropTypes from 'prop-types';
 
-export default function Menu({ showMenu }) {
+export default function Menu({ showMenu, onClickOption }) {
   return (
     <section className={'sidenav shadow-right ' + (!showMenu && 'hidden')}>
       <nav className="sidenav_menu">
         <div className="sidenav__menuheading">Overview</div>
-        <NavLink className="sidenav__menulink" to="/" aria-current="page">
+        <NavLink className="sidenav__menulink" to="/" onClick={onClickOption} aria-current="page">
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="activity" size="24" />
           </span>
@@ -22,7 +22,7 @@ export default function Menu({ showMenu }) {
         </NavLink>
         */}
         <div className="sidenav__menuheading">Webs</div>
-        <NavLink className="sidenav__menulink" to="/sites">
+        <NavLink className="sidenav__menulink" to="/sites" onClick={onClickOption}>
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="folder" size="24" />
           </span>
@@ -52,7 +52,7 @@ export default function Menu({ showMenu }) {
         </NavLink>
         */}
         <div className="sidenav__menuheading">WP</div>
-        <NavLink className="sidenav__menulink" to="/plugins/">
+        <NavLink className="sidenav__menulink" to="/plugins/" onClick={onClickOption}>
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="slider" size="24" />
           </span>
@@ -63,7 +63,7 @@ export default function Menu({ showMenu }) {
         </NavLink>
         <div className="sidenav__menuheading">Tests</div>
         <div className="sidenav__menuheading">Tools</div>
-        <NavLink className="sidenav__menulink" to="/backup">
+        <NavLink className="sidenav__menulink" to="/backup" onClick={onClickOption}>
           <span className="sidenav__menulink--icon">
             <FeatherIcon icon="package" size="24" />
           </span>

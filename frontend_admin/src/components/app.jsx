@@ -12,13 +12,19 @@ export function App() {
   const [isSidenavShown, setSidenavShown] = useState(false);
 
   const handleToggleSidebar = () => {
-    setSidenavShown(!isSidenavShown);
+    setSidenavShown(isSidenavShown ? false : Date.now());
   };
+
+  const handleClickMenu = () => {
+    if( Date.now() - isSidenavShown < 2300 ) {
+      setSidenavShown(false);
+    }
+  }
 
   return (
     <>
       <Header toggleSidebar={handleToggleSidebar} />
-      <Menu showMenu={isSidenavShown} />
+      <Menu onClickOption={handleClickMenu} showMenu={isSidenavShown} />
       <main className="main">
         <Routes>
           <Route path="/" element={<Sites />} />
