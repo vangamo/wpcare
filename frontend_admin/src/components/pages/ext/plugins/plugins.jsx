@@ -19,6 +19,8 @@ const PLUGINS_COLUMNS = [
   { heading: 'Sites', type: 'text', col: 'sites' },
 ];
 
+const SERVER_API = (import.meta.env.DEV) ? '//localhost:5000' : '';
+
 export default function () {
   const [isShownMultiplePluginBox, setIsShownMultiplePluginBox] = useState(false);
   const [multiplePluginsInput, setMultiplePluginsInput] = useState('');
@@ -28,7 +30,7 @@ export default function () {
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
-    fetch('/api/plugins/', { method: 'GET' })
+    fetch(SERVER_API+'/api/plugins/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -41,7 +43,7 @@ export default function () {
   }, []);
 
   const handleClickCreateMultiple = () => {
-    fetch('/api/sites/', { method: 'GET' })
+    fetch(SERVER_API+'/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -96,7 +98,7 @@ export default function () {
     setShownEditRow(false);
     console.log('Create', data);
 
-    fetch('/api/plugin/', {
+    fetch(SERVER_API+'/api/plugin/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -111,7 +113,7 @@ export default function () {
   const handleUpdatePlugin = (newData, oldData) => {
     console.log('Edit', { newData, oldData });
 
-    fetch('/api/plugin/' + oldData.id, {
+    fetch(SERVER_API+'/api/plugin/' + oldData.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newData),
@@ -126,7 +128,7 @@ export default function () {
   const handleDeletePlugin = (id) => {
     console.log('Delete', id);
 
-    fetch('/api/plugin/' + id, { method: 'DELETE' })
+    fetch(SERVER_API+'/api/plugin/' + id, { method: 'DELETE' })
       .then((response) => {
         console.dir(response);
         return response.json();

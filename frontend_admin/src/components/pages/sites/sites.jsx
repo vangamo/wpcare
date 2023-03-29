@@ -11,13 +11,15 @@ const SITES_COLUMNS = [
   { heading: 'Last access', type: 'datetime', col: 'lastAccess' },
 ];
 
+const SERVER_API = (import.meta.env.DEV) ? '//localhost:5000' : '';
+
 export default function () {
   const [isShownEditRow, setShownEditRow] = useState(false);
   const [listStatus, setListStatus] = useState('pending');
   const [sitesList, setSitesList] = useState([]);
 
   useEffect(() => {
-    fetch('/api/sites/', { method: 'GET' })
+    fetch(SERVER_API+'/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
@@ -33,7 +35,7 @@ export default function () {
     setShownEditRow(false);
     console.log('Create', data);
 
-    fetch('/api/site/', {
+    fetch(SERVER_API+'/api/site/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -48,7 +50,7 @@ export default function () {
   const handleUpdateSite = (newData, oldData) => {
     console.log('Edit', { newData, oldData });
 
-    fetch('/api/site/' + oldData.id, {
+    fetch(SERVER_API+'/api/site/' + oldData.id, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newData),
@@ -63,7 +65,7 @@ export default function () {
   const handleDeleteSite = (id) => {
     console.log('Delete', id);
 
-    fetch('/api/site/' + id, { method: 'DELETE' })
+    fetch(SERVER_API+'/api/site/' + id, { method: 'DELETE' })
       .then((response) => {
         console.dir(response);
         return response.json();

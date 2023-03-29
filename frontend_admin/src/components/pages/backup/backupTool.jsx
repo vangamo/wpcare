@@ -12,13 +12,15 @@ const downloadContent = (filename, content, mime = MIME_TYPE) => {
   downloadElement.click();
 };
 
+const SERVER_API = (import.meta.env.DEV) ? '//localhost:5000' : '';
+
 export default function backupTool() {
   const IMPORT_FUNCTIONS = {
     '0.1.1': (data) => {
       const { sites } = data;
       for (const eachSite of sites) {
         console.log('Creating', eachSite);
-        fetch('/api/site/', {
+        fetch(SERVER_API+'/api/site/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eachSite),
@@ -39,7 +41,7 @@ export default function backupTool() {
   };
 
   const handleClickExport = () => {
-    fetch('/api/sites/', { method: 'GET' })
+    fetch(SERVER_API+'/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
         if (data.info.success) {
