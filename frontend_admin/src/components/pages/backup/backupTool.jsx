@@ -40,7 +40,54 @@ export default function backupTool() {
     }
   };
 
-  const handleClickExport = () => {
+  const getSites = () => {
+    console.log('Lanzado sites');
+    return fetch(SERVER_API+'/api/sites/', { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Recibido sites');
+        return data.results;
+      });
+  };
+
+  const getPlugins = () => {
+    console.log('Lanzado plugins');
+    return fetch(SERVER_API+'/api/plugins/', { method: 'GET' })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Recibido plugins');
+        return data.results;
+      });
+  };
+
+  const handleClickExport = async () => {
+    try {
+      const [sites, plugins] = await Promise.all([getSites(), getPlugins()]);
+
+      plugins.forEach(p => {
+        const siteOfPlugin = sites.find(s => s.url === p.site_url);
+        if( siteOfPlugin ) {
+          if( !siteOfPlugin.plugins ) {
+            siteOfPlugin.plugins = [];
+          }
+          siteOfPlugin.plugins.push(p);
+        }
+      });
+
+      const exportDataJson = {
+        version: '0.1.2',
+        sites: sites,
+      };
+
+      const exportDataString = JSON.stringify(exportDataJson);
+      const filename =
+        'wpcare-backup-' + format(new Date(), 'yyyy.MM.dd-HH.mm') + '.json';
+
+      downloadContent(filename, exportDataString, MIME_TYPE);
+    } catch (ex) {
+      console.error('Error', data);
+    }
+/*
     fetch(SERVER_API+'/api/sites/', { method: 'GET' })
       .then((response) => response.json())
       .then((data) => {
@@ -48,7 +95,7 @@ export default function backupTool() {
           const sites = data.results;
 
           const exportDataJson = {
-            version: '0.1.1',
+            version: '0.1.2',
             sites: sites,
           };
 
@@ -60,6 +107,7 @@ export default function backupTool() {
           console.error('Error', data);
         }
       });
+*/
   };
 
   const readFile = (fd) => {
