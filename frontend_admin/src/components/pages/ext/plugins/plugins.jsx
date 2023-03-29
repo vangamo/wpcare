@@ -51,7 +51,7 @@ export default function () {
           const pluginsOfSitesInfo = proccessInput(multiplePluginsInput);
 
           for (const site of pluginsOfSitesInfo) {
-            const siteInfo = allSites.find((s) => s.url === site.url);
+            const siteInfo = allSites.find((s) => s.url.replace(/\/$/, '').replace(/https?:\/\//, '').replace('www.','') === site.url.replace(/\/$/, '').replace(/https?:\/\//, '').replace('www.',''));
 
             if (siteInfo) {
               const siteId = siteInfo.id;
