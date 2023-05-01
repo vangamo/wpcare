@@ -29,12 +29,129 @@ export default function backupTool() {
           .then((data) => console.log(data));
       }
     },
+    '0.1.2': (data) => {
+      fetch(SERVER_API+'/api/sites/')
+        .then((response) => response.json())
+        .then(({results: savedSites}) => {
+      fetch(SERVER_API+'/api/plugins/')
+          .then((response) => response.json())
+          .then(({results: savedPlugins}) => {
+          console.log('Saved sites',savedSites);
+          const { sites } = data;
+          for (const eachSite of sites) {
+            const foundSite = savedSites.find(s => s.url.replace(/\/$/, '').replace(/https?:\/\//, '').replace('www.','') === eachSite.url.replace(/\/$/, '').replace(/https?:\/\//, '').replace('www.',''));
+            let siteId = foundSite?.id;
+
+            if( foundSite ) {
+              console.log('Site found', eachSite, foundSite);
+
+              if( foundSite.name != eachSite.name || foundSite.type != eachSite.type || foundSite.lastAccess < eachSite.lastAccess) {
+                console.log('Modifying site found', eachSite, foundSite);
+
+                const siteData = {
+                  name: eachSite.name,
+                  type: eachSite.type,
+                  url: eachSite.url,
+                  lastAccess: eachSite.lastAccess,
+                };
+  
+                fetch(SERVER_API+'/api/site/'+eachSite.id, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(siteData),
+                })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    //console.log(data);
+                    siteId = data.result.id;
+                  });
+
+              }
+            }
+            else {
+              console.log('Creating site', eachSite);
+
+              const siteData = {
+                name: eachSite.name,
+                type: eachSite.type,
+                url: eachSite.url,
+                lastAccess: eachSite.lastAccess,
+              };
+
+              fetch(SERVER_API+'/api/site/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(siteData),
+              })
+                .then((response) => response.json())
+                .then((data) => console.log(data));
+            }
+
+
+            if( Array.isArray(eachSite.plugins) ) {
+            for( const eachPlugin of eachSite.plugins ) {
+              console.log(`Plugin ${eachPlugin.name} for ${eachSite.name} (id:${siteId})`, eachPlugin);
+
+              eachPlugin.slug = eachPlugin.slug.substring(0, 63);
+              eachPlugin.active = true;
+              eachPlugin.sitewp_id = siteId;
+
+              const foundPlugin = savedPlugins.find(
+                (p) => p.slug === eachPlugin.slug && p.site_url === eachSite.url
+              );
+
+              if (foundPlugin) {
+                // Upsert plugin
+                if( foundPlugin.name != eachPlugin.name ||
+                    foundPlugin.active != eachPlugin.active ||
+                    foundPlugin.version != eachPlugin.version ||
+                    foundPlugin.author != eachPlugin.author ||
+                    foundPlugin.author_uri != eachPlugin.author_uri ||
+                    foundPlugin.plugin_uri != eachPlugin.plugin_uri ||
+                    foundPlugin.wp_req_version != eachPlugin.wp_req_version ||
+                    foundPlugin.wp_min_version != eachPlugin.wp_min_version ||
+                    foundPlugin.wp_tested_version != eachPlugin.wp_tested_version ||
+                    foundPlugin.php_req_version != eachPlugin.php_req_version ||
+                    foundPlugin.data != eachPlugin.data ||
+                    foundPlugin.lastAccess < eachPlugin.lastAccess) {
+                  console.log('Modifying plugin found', eachPlugin);
+
+                  fetch(SERVER_API+'/api/plugin/'+foundPlugin.id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(eachPlugin),
+                  })
+                    .then((response) => response.json())
+                    .then((data) => console.log(data));
+                }
+              } else {
+                // Insert plugin
+                console.log('Creating plugin', eachPlugin);
+
+                fetch(SERVER_API+'/api/plugin/', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(eachPlugin),
+                })
+                  .then((response) => response.json())
+                  .then((data) => console.log(data));
+              }
+            }  // FOR eachPlugin
+            }
+
+          }  // FOR eachSite
+        })});
+      
+    },
   };
   const handleImport = (data) => {
     const version = data.version;
 
-    if (!version || !IMPORT_FUNCTIONS[version]) {
+    if (!version) {
+      console.error("Imported file has not version.");
+    } if (!IMPORT_FUNCTIONS[version]) {
       // Version error.
+      console.error(`Unsupported version (v=${version}) of imported file.`);
     } else {
       IMPORT_FUNCTIONS[version](data);
     }
